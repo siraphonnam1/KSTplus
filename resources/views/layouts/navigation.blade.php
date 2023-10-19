@@ -17,7 +17,11 @@
                     </x-nav-link>
                 </div>
             </div>
-
+            <div class="flex items-center ml-2">
+                <div style="background-color: var(--primary-color)" class="p-2 rounded-pill px-4">
+                    <p class="text-light fw-bold">30 Dayleft</p>
+                </div>
+            </div>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
@@ -68,7 +72,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                {{ __('Home') }}
+                {{ __('My Course') }}
             </x-responsive-nav-link>
         </div>
 
