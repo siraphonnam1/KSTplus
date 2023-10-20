@@ -22,6 +22,9 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('page.home');
 })->middleware(['auth', 'verified'])->name('home');
+Route::get('/main', function () {
+    return view('page.main');
+})->middleware(['auth', 'verified'])->name('main');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
