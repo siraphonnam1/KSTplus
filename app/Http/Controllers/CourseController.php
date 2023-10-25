@@ -18,4 +18,8 @@ class CourseController extends Controller
         return view("page.course-detail");
     }
 
+    public function allCourse(Request $request) {
+        return view("page.allcourse");
+    }
+
 }

@@ -32,8 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
+    // page
     Route::get('/course/detail', [CourseController::class, 'courseDetail'])->name('course.detail');
+    Route::get('/course/all', [CourseController::class, 'allCourse'])->name('course.all');
 });
 
 require __DIR__.'/auth.php';
