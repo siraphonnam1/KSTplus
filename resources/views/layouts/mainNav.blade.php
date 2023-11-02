@@ -24,20 +24,37 @@
                     <a href="{{route('main')}}" >
                         {{ __('Home') }}
                     </a>
-                    <a href="#" >
-                        {{ __('Own Course') }}
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <a href="#" >
+                                {{ __('Course') }}
+                            </a>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Own Course') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('course.all')">
+                                {{ __('All course') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('course.all')">
+                                {{ __('Classroom') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                    <a href="{{route('users.all')}}" >
+                        {{ __('Users') }}
                     </a>
-                    <a href="#" >
-                        {{ __('All course') }}
+                    <a href="{{route('request.all')}}" >
+                        {{ __('Request') }}
                     </a>
-                    <a href="#" >
-                        {{ __('My Course') }}
-                    </a>
-                    <a href="#" >
-                        {{ __('User') }}
+                    <a href="{{route('manage')}}" >
+                        {{ __('Manage') }}
                     </a>
                 </div>
             </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
