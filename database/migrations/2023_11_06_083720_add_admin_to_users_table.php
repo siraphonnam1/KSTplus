@@ -15,7 +15,7 @@ return new class extends Migration
         DB::table('users')->insert([
             'name' => 'adminKST',
             'username' => 'admin',
-            'password' => 'iddrivesadmin',
+            'password' => bcrypt('iddrivesadmin'),
             'agency' => '0',
             'brn' => '0',
             'dpm' => '0',
