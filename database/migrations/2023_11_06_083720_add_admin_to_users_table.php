@@ -20,6 +20,7 @@ return new class extends Migration
             'brn' => '0',
             'dpm' => '0',
             'role' => 'admin',
+            'icon' => null,
             // ... other rows
         ]);
     }
