@@ -16,15 +16,15 @@
                         <div class="my-3 w-100 px-4">
                             <div class="input-group input-group-sm mb-2">
                                 <span class="input-group-text" id="basic-addon1">Username:</span>
-                                <input type="text" class="form-control" id="username" name="username" value="meanie" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span class="input-group-text" id="basic-addon1">Password:</span>
-                                <input type="password" class="form-control" id="password" name="password" value="11111111" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                                <input type="password" class="form-control" id="password" name="password" value="" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span class="input-group-text" id="basic-addon1">Name:</span>
-                                <input type="text" class="form-control" name="name" id="name" value="Meanie" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                                <input type="text" class="form-control" name="name" id="name" value="{{ $user->name }}" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
                                 <span class="input-group-text" id="basic-addon1">Agency:</span>
@@ -84,8 +84,9 @@
 
                 <div class="bg-white rounded-4 mb-2 shadow-sm">
                     <div class="text-center my-3">
-                        <div class="my-4">
+                        <div class="my-4 flex justify-between px-4">
                             <p class="fs-4 fw-bold">Course</p>
+                            <button class="btn btn-success" id="addC2User"><i class="bi bi-plus-lg"></i></button>
                         </div>
                         <div>
                             <table class="table table-hover" id="course-datatable">
@@ -93,33 +94,21 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">code</th>
-                                        <th scope="col">Course name</th>
+                                        <th scope="col" colspan="3" >Course name</th>
                                         <th scope="col">Enroll date</th>
-                                        <th scope="col">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>ID0003</td>
-                                        <td>cn</td>
-                                        <td>{{ date('Y-m-d') }}</td>
-                                        <td>Learning...</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>ID0002</td>
-                                        <td>course</td>
-                                        <td>{{ date('Y-m-d') }}</td>
-                                        <td class="table-danger">Abandon</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>ID0001</td>
-                                        <td>gg</td>
-                                        <td>{{ date('Y-m-d') }}</td>
-                                        <td class="table-success">Success</td>
-                                    </tr>
+                                    @foreach ($ucourse as $course)
+                                        <tr>
+                                            <th scope="row"><button class="text-danger delete-btn" value="{{ $course->id }}" userId="{{ $user->id }}"><i class="bi bi-trash"></i></button></th>
+                                            <td>{{ $course->code }}</td>
+                                            <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ Str::limit($course->title, 60) }}</td>
+                                            <td>
+                                                {{ $course->studens[$user->id] ?? '' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -261,6 +250,119 @@
 
         cancelBtn.style.display = 'none';
         editBtn.innerText = 'Edit';
+    });
+
+
+    const addCBtn = document.getElementById('addC2User');
+    addCBtn.addEventListener('click', () => {
+        Swal.fire({
+            title: 'Add Course',
+            html: `
+                <select id="select-course" class="select2" multiple="multiple" style="width: 100%">
+                    @foreach ($courses as $course)
+                        <option value="{{ $course->id }}">{{ $course->code }}</option>
+                    @endforeach
+                </select>
+            `,
+            didOpen: () => {
+                // Initialize Select2 on the #select-course element
+                $('#select-course').select2({
+                    dropdownParent: $(".swal2-container"),
+                    placeholder: "Select courses",
+                    allowClear: true
+                });
+            },
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const courseSel = $('#select-course').select2('data').map(option => option.id);
+
+                if (courseSel.length < 1) {
+                    Swal.showValidationMessage("Please select a course!");
+                    return;
+                }
+
+                return fetch('/user/add/course', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ courses: courseSel, uid: {{$user->id}}})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText)
+                    }
+                    return response.json()
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(
+                        `Request failed`
+                    )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(result.value);
+                Swal.fire(
+                    'Success!',
+                    'Your change has been saved.',
+                    'success'
+                )
+            }
+        });
+    });
+
+    const delBtn = document.querySelectorAll(".delete-btn");
+    delBtn.forEach((btn) => {
+        const courseId = btn.value;
+        const userId = btn.getAttribute('userId');
+        btn.addEventListener('click', function () {
+            Swal.fire({
+                title: `Are you sure?`,
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it!',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch('/user/remove/course', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ cid: courseId, uid: userId})
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed`
+                        )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(result.value);
+                    Swal.fire(
+                        'Deleted!',
+                        'course has been removed.',
+                        'success'
+                    )
+                }
+            })
+        });
     });
 </script>
 

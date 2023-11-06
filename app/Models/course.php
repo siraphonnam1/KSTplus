@@ -20,7 +20,16 @@ class course extends Model
         "code",
     ] ;
 
+    public function getStudensAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
     public function getDpm() {
         return $this->belongsTo(department::class, 'dpm');
+    }
+
+    public function getTeacher() {
+        return $this->belongsTo(User::class, 'teacher');
     }
 }

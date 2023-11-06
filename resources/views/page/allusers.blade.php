@@ -24,15 +24,43 @@
                                 <tr>
                                     <td>1</td>
                                     <td>{{ $user->name }}</td>
-                                    <td>New</td>
-                                    <td>{{ $user->dpmName->name }}</td>
+                                    <td>{{ $user->role }}</td>
+                                    <td>{{ optional($user->dpmName)->name }}</td>
                                     <td>12</td>
                                     <td>0</td>
-                                    <td>Forever</td>
                                     <td>
-                                        <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
-                                        <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                        @if ($user->startlt)
+                                            @php
+                                                // Your date string
+                                                $dateString = $user->startlt;
+
+                                                // Parse the date string into a Carbon instance
+                                                $date = \Carbon\Carbon::parse($dateString);
+
+                                                // Get the difference in days
+                                                $diffInDays = \Carbon\Carbon::now()->diffInDays($date, false);
+                                            @endphp
+                                            <p class="text-red-400">{{ 30 - abs($diffInDays) }}/30</p>
+                                        @else
+                                            Forever
+                                        @endif
                                     </td>
+                                    @if (($user->role == 'admin'))
+                                        <td>
+                                            @if ((Auth::user()->role == 'admin'))
+                                                <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
+                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                            @endif
+                                        </td>
+                                    @else
+                                        <td>
+                                            <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                            @if ($user->role == 'new')
+                                                <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}"><i class="bi bi-calendar2-plus"></i></button>
+                                            @endif
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -103,10 +131,9 @@
                                             <div class="my-4">
                                                 <p>Course</p>
                                                 <select class="form-select" id="small-select2-options-multiple-field" aria-label="Small select example" multiple name="courses[]">
-                                                    <option>Christmas Island</option>
-                                                    <option>South Sudan</option>
-                                                    <option>Jamaica</option>
-                                                    <option>Kenya</option>
+                                                    @foreach ($courses as $course)
+                                                        <option value="{{ $course->id }}">{{ $course->code }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             @if ($errors->any())
@@ -126,78 +153,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-4 sticky-top top-4 border-0 shadow-sm">
-                        <p class="mb-2">Dpartment:</p>
-                        <div class="d-flex flex-wrap ps-2 mb-3">
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        ITI
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        CS
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        HR
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        AD
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="mb-2">Status:</p>
-                        <div class="d-flex flex-wrap ps-2 mb-3">
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        New
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Normal
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="w-50">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Special
-                                    </label>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -273,6 +228,55 @@
                     Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
+                    'success'
+                    )
+                }
+            })
+        })
+    })
+
+    const rewBtns = document.querySelectorAll('#renewBtn');
+    rewBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    const uId = btn.value;
+
+                    return fetch('/user/renew', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ uid: uId})
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed`
+                        )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(result.value);
+                    Swal.fire(
+                    'Successed!',
+                    'User has been renewed.',
                     'success'
                     )
                 }

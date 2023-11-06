@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use function Laravel\Prompts\alert;
 use App\Models\agency;
 use App\Models\branch;
+use App\Models\course;
 use App\Models\department;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Str;
 
 
 class ManageController extends Controller
@@ -24,8 +26,9 @@ class ManageController extends Controller
         $brns = branch::all();
         $dpms = department::all();
         $roles = Role::all();
+        $courses = course::all();
         $permissions = Permission::all();
-        return view("page.manage", compact("agns","brns","dpms", "roles", "permissions"));
+        return view("page.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
     }
 
     /**
@@ -50,7 +53,7 @@ class ManageController extends Controller
             $agn->save();
             return response()->json(['success' => $agn]);
         } catch (\Throwable $th) {
-                return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 
@@ -73,7 +76,7 @@ class ManageController extends Controller
             $brn->save();
             return response()->json(['success' => $name]);
         } catch (\Throwable $th) {
-                return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 
@@ -89,7 +92,7 @@ class ManageController extends Controller
             $role = Role::create(['name' => $request->name]);
             return response()->json(['success' => $role]);
         } catch (\Throwable $th) {
-                return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 
@@ -113,6 +116,7 @@ class ManageController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
+            'prefix' => 'required|max:255',
             'branch' => 'max:255',
         ]);
         if ($validator->fails()) {
@@ -121,16 +125,18 @@ class ManageController extends Controller
         try {
             $validatedData = $validator->validated();
             $name = $validatedData['name'];
+            $prefix = $validatedData['prefix'];
             $branch = $validatedData['branch'];
             $dpm = new department;
             $brn = branch::find( $branch );
             $dpm->name = $name;
+            $dpm->prefix = Str::upper($prefix);
             $dpm->branch = $branch;
             $dpm->agency = $brn->agency;
             $dpm->save();
             return response()->json(['success' => $name.' '.$branch]);
         } catch (\Throwable $th) {
-                return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 
@@ -149,7 +155,7 @@ class ManageController extends Controller
             };
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
-                return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 

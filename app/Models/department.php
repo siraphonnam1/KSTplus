@@ -15,6 +15,7 @@ class department extends Model
         "agency",
         "branch",
         "course",
+        "prefix",
     ] ;
 
     public function brnName() {

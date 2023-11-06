@@ -10,25 +10,25 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
-class EmailVerificationTest extends TestCase
+class usernameVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_email_verification_screen_can_be_rendered(): void
+    public function test_username_verification_screen_can_be_rendered(): void
     {
         $user = User::factory()->create([
-            'email_verified_at' => null,
+            'username_verified_at' => null,
         ]);
 
-        $response = $this->actingAs($user)->get('/verify-email');
+        $response = $this->actingAs($user)->get('/verify-username');
 
         $response->assertStatus(200);
     }
 
-    public function test_email_can_be_verified(): void
+    public function test_username_can_be_verified(): void
     {
         $user = User::factory()->create([
-            'email_verified_at' => null,
+            'username_verified_at' => null,
         ]);
 
         Event::fake();
@@ -36,30 +36,30 @@ class EmailVerificationTest extends TestCase
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
+            ['id' => $user->id, 'hash' => sha1($user->username)]
         );
 
         $response = $this->actingAs($user)->get($verificationUrl);
 
         Event::assertDispatched(Verified::class);
-        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        $this->assertTrue($user->fresh()->hasVerifiedusername());
         $response->assertRedirect(RouteServiceProvider::HOME.'?verified=1');
     }
 
-    public function test_email_is_not_verified_with_invalid_hash(): void
+    public function test_username_is_not_verified_with_invalid_hash(): void
     {
         $user = User::factory()->create([
-            'email_verified_at' => null,
+            'username_verified_at' => null,
         ]);
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1('wrong-email')]
+            ['id' => $user->id, 'hash' => sha1('wrong-username')]
         );
 
         $this->actingAs($user)->get($verificationUrl);
 
-        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+        $this->assertFalse($user->fresh()->hasVerifiedusername());
     }
 }

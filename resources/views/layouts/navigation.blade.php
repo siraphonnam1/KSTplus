@@ -19,7 +19,18 @@
             </div>
             <div class="flex items-center ml-2">
                 <div style="background-color: var(--primary-color)" class="p-2 rounded-pill px-4">
-                    <p class="text-light fw-bold">30 Dayleft</p>
+                    @php
+                        // Your date string
+                        $dateString = Auth::user()->startlt;
+
+                        // Parse the date string into a Carbon instance
+                        $date = \Carbon\Carbon::parse($dateString);
+
+                        // Get the difference in days
+                        $diffInDays = \Carbon\Carbon::now()->diffInDays($date, false);
+                        $finDay = (30 + $diffInDays) < 0 ? 0 : (30 + $diffInDays);
+                    @endphp
+                    <p class="text-light fw-bold">{{$finDay}} Dayleft</p>
                 </div>
             </div>
             <!-- Settings Dropdown -->
@@ -80,7 +91,7 @@
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->username }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

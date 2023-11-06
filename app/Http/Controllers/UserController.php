@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Models\User;
+use App\Models\course;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 Use Alert;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Exception;
 
 class UserController extends Controller
 {
@@ -102,7 +104,6 @@ class UserController extends Controller
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'username' => ['required', 'string', 'max:255'],
-                'password' => ['required', Rules\Password::defaults()],
                 'agn' => ['required', 'string', 'max:255'],
                 'brn' => ['required', 'string', 'max:255'],
                 'dpm' => ['required', 'string', 'max:255'],
@@ -119,11 +120,14 @@ class UserController extends Controller
             $user = User::find($request->uid);
             $user->name = $request->name;
             $user->username = $request->username;
-            $user->password = $request->password;
+            if (strlen($request->password) >= 8) {
+                $user->password = $request->password;
+            }
             $user->agency = $request->agn;
             $user->brn = $request->brn;
             $user->dpm = $request->dpm;
             $user->role = $request->role;
+            $user->startlt = ($request->role == 'new' ? date('Y-m-d') : null);
             foreach (Role::all() as $role) {
                 if ($user->hasRole($role->name)) {
                     $user->removeRole($role->name);
@@ -146,7 +150,84 @@ class UserController extends Controller
             User::find( $request->delid )->delete();
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'ee '.$th->getMessage()]);
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public function renew(Request $request)
+    {
+        try {
+            $user = User::find( $request->uid );
+            $user->update(['startlt'=> date('Y-m-d') ]);
+            return response()->json(['success' => $request->all() ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public function addCourse(Request $request) {
+        try {
+            $user = User::find( $request->uid );
+            $courses = course::whereIn('id', $request->courses )->get();
+            $courseContainer = [];
+            $stdContainer = [];
+            $oCourses = $user->courses ?? [];
+            if (count($oCourses) > 0) {
+                $courseContainer = array_unique(array_merge($oCourses, $request->courses));
+            } else {
+                $courseContainer = $request->courses;
+            }
+
+            foreach ($courses as $course) {
+                $oStd = is_array($course->studens) ? $course->studens : json_decode($course->studens, true);
+                if (count($oStd) > 0) {
+                    $stdContainer = $oStd;
+                }
+                if (!($stdContainer[$user->id] ?? false)) {
+                    $stdContainer[$user->id] = date('Y-m-d');
+                }
+                $course->studens = $stdContainer;
+                $course->save();
+            }
+            $user->courses = $courseContainer;
+            $user->save();
+            return response()->json(['success' => $stdContainer ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public function removeCourse(Request $request) {
+        try {
+            $course = course::find($request->cid);
+            $user = User::find($request->uid);
+
+            if (!$course || !$user) {
+                return response()->json(['error' => 'Course or User not found.'], 404);
+            }
+
+            // remove student from course
+            $studentsC = $course->studens;
+            if (array_key_exists($request->uid, $studentsC)) {
+                unset($studentsC[$request->uid]);
+            }
+
+            // remove course from user
+            $userCourse = [];
+            foreach ($user->courses as $courseId) {
+                if ($request->cid != $courseId) {
+                    $userCourse[] = $courseId;
+                }
+            }
+
+            // save to database
+            $course->studens = $studentsC;
+            $user->courses = $userCourse;
+            $user->save();
+            $course->save();
+            return response()->json(['success' => $request->all() ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
         }
     }
 }

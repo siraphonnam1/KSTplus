@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="text-center mt-5">
-        <p class="fs-1 fw-bold">All Course</p>
+        <p class="fs-1 fw-bold">My Classroom</p>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-4 col-lg-4 px-4 col-sm-12">
                     <div class="card p-4 border-0 shadow-sm">
-                        <form action="{{ route('courses.search') }}" method="GET">
+                        <form action="{{ route('courses.searchmy') }}" method="GET">
                              @csrf
                             <div class="p-2 text-center fw-bold fs-4"><p>Filters <i class="bi bi-filter-left"></i></p></div>
                             <div class="form-floating mb-3">

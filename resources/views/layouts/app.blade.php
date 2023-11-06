@@ -39,8 +39,11 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 " style="background-color: var(--bg-color);">
-            @include('sweetalert::alert')
-            @include('layouts.mainNav')
+            @if (Auth::user()->role == 'new')
+                @include('layouts.navigation')
+            @else
+                @include('layouts.mainNav')
+            @endif
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
@@ -54,8 +57,8 @@
             <main style="min-height: 62vh; background-color: var(--bg-color);">
                 {{ $slot }}
             </main>
-            <footer class="flex mt-5 w-100 justify-around w-full bg-light py-4 ">
-                <div class="flex gap-2 align-items-center">
+            <footer class="flex mt-5 w-100 justify-around w-full bg-light p-4 flex-wrap">
+                <div class="flex gap-2 align-items-center justify-center flex-wrap mb-2">
                     <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
                     <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>

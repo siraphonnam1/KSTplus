@@ -77,10 +77,10 @@
                                 <tr>
                                     <th scope="col">Action</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Prefix</th>
                                     <th scope="col">Personnel</th>
                                     <th scope="col">Agency</th>
                                     <th scope="col">Branch</th>
-                                    <th scope="col">OwnCourse</th>
                                 </tr>
                             </thead>
                             <tbody >
@@ -88,10 +88,13 @@
                                     <tr>
                                         <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="dpm" value="{{ $dpm->id }}"><i class="bi bi-trash"></i></button></td>
                                         <td>{{$dpm->name}}</td>
-                                        <td>0</td>
+                                        <td>{{$dpm->prefix}}</td>
+                                            @php
+                                                $numPers = App\Models\User::where('dpm', $dpm->id)->count();
+                                            @endphp
+                                        <td>{{$numPers}}</td>
                                         <td>{{optional($dpm->brnName->agencyName)->name}}</td>
                                         <td>{{optional($dpm->brnName)->name}}</td>
-                                        <td>0</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -115,27 +118,26 @@
                         <p class="text-2xl font-bold"><i class="bi bi-backpack"></i> Course</p>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-fixed">
                             <thead class="table-dark">
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">Code</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">lecturer</th>
+                                    <th scope="col" colspan="3">Name</th>
+                                    <th scope="col">Lecturer</th>
                                     <th scope="col">Dpm</th>
                                     <th scope="col">student</th>
                                 </tr>
                             </thead>
-                            <tbody >
-
-                                <tr>
-                                    <td>1</td>
-                                    <td>Meanie</td>
-                                    <td>New</td>
-                                    <td>IT</td>
-                                    <td>12</td>
-                                    <td>0</td>
-                                </tr>
+                            <tbody class="scrollable-tbody">
+                                @foreach ($courses as $course)
+                                    <tr>
+                                        <td>{{ $course->code }}</td>
+                                        <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ Str::limit($course->title, 20) }}</td>
+                                        <td>{{ $course->getTeacher->name }}</td>
+                                        <td>{{ $course->getDpm->name }}</td>
+                                        <td>{{ count($course->studens ?? []) }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -218,16 +220,35 @@
             </div>
         </div>
     </div>
+    @php
+        $seriesList = [];
+        $dpmList= [];
+        foreach ($dpms as $key => $dpm) {
+            $seriesList[] = App\Models\course::where('dpm', $dpm->id)->count();
+            $dpmList[] = $dpm->name;
+        };
+    @endphp
 </x-app-layout>
-
 
 <script>
     // ApexCharts options and config
     window.addEventListener("load", function() {
+        const seriesList = @json($seriesList); // Converts the PHP array to a JSON string that JavaScript can read
+        const dpmList = @json($dpmList);
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        const colors = seriesList.map(() => getRandomColor());
       const getChartOptions = () => {
           return {
-            series: [10, 5, 5],
-            colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+            series: seriesList,
+            colors: colors,
             chart: {
               height: 420,
               width: "100%",
@@ -248,7 +269,7 @@
                 }
               },
             },
-            labels: ["IT", "AD", "SALE"],
+            labels: dpmList,
             dataLabels: {
               enabled: true,
               style: {
@@ -520,6 +541,11 @@
                     <input type="text" class="form-control" id="name">
                 </div>
 
+                <div class="mb-3">
+                    <label for="prefix" class="form-label">Prefix</label>
+                    <input type="text" class="form-control" id="prefix">
+                </div>
+
                 <label for="brn" class="form-label">Branch</label>
                 <select class="form-select" aria-label="Default select example" id="brn">
                     @foreach ($brns as $brn)
@@ -532,10 +558,11 @@
             showLoaderOnConfirm: true,
             preConfirm: (name) => {
                 const dpmname = document.getElementById('name').value;
+                const prefix = document.getElementById('prefix').value;
                 const brn = document.getElementById('brn').value;
 
-                if (!dpmname) {
-                    Swal.showValidationMessage("Name is required");
+                if (!dpmname || !prefix ) {
+                    Swal.showValidationMessage("Name or prefix is required");
                     return;
                 }
 
@@ -545,7 +572,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ name: dpmname, branch:brn })
+                    body: JSON.stringify({ name: dpmname, branch:brn, prefix:prefix })
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -626,5 +653,25 @@
 </script>
 
 <style>
+.table-fixed tbody {
+        height: calc(6 * 50px); /* Assuming each row is 50px high */
+        overflow-y: auto;
+        display: block;
+    }
 
+    .table-fixed thead,
+    .table-fixed tbody tr {
+        display: table;
+        width: 100%; /* Optional for width:table-layout fixed */
+        table-layout: fixed; /* Optional: Helps in equal width of cols */
+    }
+
+    .table-fixed thead {
+        width: calc(100% - 1em); /* Adjust this value if a scrollbar appears */
+        background: #000; /* Keeping the header style consistent */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5; /* or any hover color */
+    }
 </style>
