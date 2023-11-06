@@ -21,6 +21,7 @@ return new class extends Migration
             'dpm' => '0',
             'role' => 'admin',
             'icon' => null,
+            'courses'=> null,
             // ... other rows
         ]);
     }
