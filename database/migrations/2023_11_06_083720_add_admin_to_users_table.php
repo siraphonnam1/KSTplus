@@ -13,13 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         DB::table('users')->insert([
-            ['name' => 'adminKST'],
-            ['username' => 'admin'],
-            ['password' => 'iddrivesadmin'],
-            ['agency' => '0'],
-            ['brn' => '0'],
-            ['dpm' => '0'],
-            ['role' => 'admin'],
+            'name' => 'adminKST',
+            'username' => 'admin',
+            'password' => 'iddrivesadmin',
+            'agency' => '0',
+            'brn' => '0',
+            'dpm' => '0',
+            'role' => 'admin',
             // ... other rows
         ]);
     }
