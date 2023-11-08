@@ -11,6 +11,8 @@ use App\Models\department;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\course;
+use App\Notifications\MessageNotification;
+
 
 class HomeController extends Controller
 {
@@ -90,4 +92,62 @@ class HomeController extends Controller
         $dpms = department::all();
         return view("page.myclassroom", compact("courses","dpms"));
     }
+
+    public function sendMessage(Request $request)
+    {
+        date_default_timezone_set('Asia/Bangkok');
+
+        try {
+            $text = $request->input('text');
+            $noticText = [
+                'user' => $request->user()->id,
+                'content' => $text,
+                'date'=> date('Y-m-d H:i:s'),
+                'status'=> 'wait',
+            ];
+            // Validation and logic for the message
+
+            // Find staff to notify
+            $staffUsers = User::whereIn('role', ['admin','staff'])->get();
+            // Send notification to each staff user
+            foreach ($staffUsers as $staffUser) {
+                $staffUser->notify(new MessageNotification($noticText));
+            }
+            return response()->json(['success' => $request->all()]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public function markAsRead($id)
+    {
+        $notification = auth()->user()->unreadNotifications->find($id);
+
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['status' => 'success'], 200);
+        }
+
+        return response()->json(['status' => 'error'], 404);
+    }
+
+    public function noticSuccess($id)
+    {
+        $notification = auth()->user()->notifications->find($id);
+
+        if ($notification) {
+            // Decode the data field into an array, modify it, and re-encode it as JSON
+            $data = $notification->data;
+            $data['status'] = 'success';
+            $notification->data = $data;
+
+            // Save the modified notification back to the database
+            $notification->save();
+
+            return response()->json(['status' => 'success'], 200);
+        }
+
+        return response()->json(['status' => 'error'], 404);
+    }
+
 }

@@ -55,4 +55,5 @@ class User extends Authenticatable
     public function dpmName() {
         return $this->belongsTo(department::class, 'dpm');
     }
+
 }

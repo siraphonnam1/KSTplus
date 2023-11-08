@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/notic/send', [HomeController::class, 'sendMessage'])->name('admin.sendMessage');
+    Route::get('/notifications/mark-as-read/{id}', [HomeController::class, 'markAsRead']);
+    Route::get('/notifications/success/{id}', [HomeController::class, 'noticSuccess']);
 
     // page
     Route::get('/main', [HomeController::class, 'main'])->name('main');
