@@ -27,7 +27,7 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 backdrop-blur-sm bg-white/20 shadow-md overflow-hidden rounded-xl shadow-2xl shadow-white" >
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4  overflow-hidden rounded-xl" style="backdrop-filter: blur(4px); box-shadow: 0px 0px 10px 0px white; border-radius: 20px; background-color:rgba(255, 255, 255, .2);">
                 {{ $slot }}
             </div>
             <footer class="flex mt-5 w-100 justify-around w-full absolute bottom-5" >
