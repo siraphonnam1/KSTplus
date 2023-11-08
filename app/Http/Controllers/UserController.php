@@ -180,7 +180,7 @@ class UserController extends Controller
 
             foreach ($courses as $course) {
                 $oStd = is_array($course->studens) ? $course->studens : json_decode($course->studens, true);
-                if (count($oStd) > 0) {
+                if (count($oStd ?? []) > 0) {
                     $stdContainer = $oStd;
                 }
                 if (!($stdContainer[$user->id] ?? false)) {
