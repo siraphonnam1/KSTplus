@@ -40,25 +40,26 @@
                                 <label for="floatingInput"><i class="bi bi-search"></i> Search</label>
                             </div>
 
-                            <p class="mb-2">Dpartment:</p>
-                            <div class="d-flex flex-wrap ps-2">
+                            @hasanyrole('staff|admin')
+                                <p class="mb-2">Dpartment:</p>
+                                <div class="d-flex flex-wrap ps-2">
 
-                                @foreach ($dpms as $dpm)
-                                    <div class="w-50">
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="departments[]" type="checkbox" value="{{ $dpm->id }}" id="flexCheckDefault"
-                                                @if (in_array($dpm->id, $departmentIds ?? []))
-                                                    checked
-                                                @endif
-                                            >
-                                            <label class="form-check-label" for="flexCheckDefault" >
-                                                {{ $dpm->name }}
-                                            </label>
+                                    @foreach ($dpms as $dpm)
+                                        <div class="w-50">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="departments[]" type="checkbox" value="{{ $dpm->id }}" id="flexCheckDefault"
+                                                    @if (in_array($dpm->id, $departmentIds ?? []))
+                                                        checked
+                                                    @endif
+                                                >
+                                                <label class="form-check-label" for="flexCheckDefault" >
+                                                    {{ $dpm->name }}
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
-
-                            </div>
+                                    @endforeach
+                                </div>
+                            @endhasanyrole
                             <button class="btn btn-info w-100 mt-2" type="submit"><i class="bi bi-search"></i> Search</button>
                         </form>
                     </div>

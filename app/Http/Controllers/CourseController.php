@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Models\User;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -89,6 +90,42 @@ class CourseController extends Controller
         }
     }
 
+    public function enroll(Request $request, $cid) {
+        try {
+            $course = course::find($cid);
+            $user = User::find( $request->user()->id );
+            $courseContainer = [];
+            $stdContainer = [];
+            $oCourses = $user->courses ?? [];
+
+            // ins user table -> course
+            if (count($oCourses) > 0) {
+                $courseContainer = array_unique(array_merge($oCourses, [(string) $course->id]));
+            } else {
+                $courseContainer[] = (string) $course->id;
+            }
+
+            // ins course table -> studens
+            $oStd = is_array($course->studens) ? $course->studens : json_decode($course->studens, true);
+            if (count($oStd) > 0) {
+                $stdContainer = $oStd;
+            }
+            if (!($stdContainer[$user->id] ?? false)) {
+                $stdContainer[$user->id] = date('Y-m-d');
+            }
+            $course->studens = $stdContainer;
+            $course->save();
+
+            $user->courses = $courseContainer;
+            $user->save();
+            return redirect()->route('course.detail', ['id' => $cid]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->route('course.detail', ['id' => $cid]);
+        }
+
+    }
+
     public function search(Request $request)
     {
         // Retrieve the search keyword and department filters from the request
@@ -123,7 +160,11 @@ class CourseController extends Controller
     {
         // Retrieve the search keyword and department filters from the request
         $search = $request->input('search');
-        $departmentIds = $request->input('departments');
+        if ($request->input('departments')) {
+            $departmentIds = [$request->user()->dpm];
+        } else {
+            $departmentIds = $request->input('departments');
+        }
         $userId = $request->user()->id; // Get the current user's ID
 
         // Start building the query with the initial condition for the current user

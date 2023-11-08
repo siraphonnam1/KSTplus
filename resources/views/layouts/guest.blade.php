@@ -19,23 +19,23 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+    <body class="font-sans text-gray-900 antialiased" >
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100" style="background-image: url('{{ asset('img/bg.jpg') }}'); background-size: cover; background-position: center">
             <div>
                 <a href="/">
                     <img src="/img/logo.png" alt="" >
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4 backdrop-blur-sm bg-white/20 shadow-md overflow-hidden rounded-xl shadow-2xl shadow-white" >
                 {{ $slot }}
             </div>
-            <footer class="flex mt-5 w-100 justify-around w-full absolute bottom-5">
+            <footer class="flex mt-5 w-100 justify-around w-full absolute bottom-5" >
                 <div class="flex gap-2 align-items-center">
                     <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
-                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
+                    <div class="flex items-center text-white text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
-                <div class="text-center flex items-center">
+                <div class="text-center flex items-center text-white">
                     <p>Powered by © 2023 KST ID System</p>
                 </div>
             </footer>

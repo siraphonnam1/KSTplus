@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 
 
@@ -28,14 +29,16 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
-        if ($request->user()->isDirty('username')) {
-            $request->user()->email_verified_at = null;
+        $user = User::find($request->user()->id);
+        try {
+            $user->name = $request->name;
+            $user->username = $request->email;
+            $user->save();
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return Redirect::route('profile.edit')->with('status', 'profile-error');
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     public function updateIcon(ProfileUpdateRequest $request): RedirectResponse

@@ -86,7 +86,7 @@ class HomeController extends Controller
     }
 
     public function classroom(Request $request) {
-        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->get();
+        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
         $dpms = department::all();
         return view("page.myclassroom", compact("courses","dpms"));
     }

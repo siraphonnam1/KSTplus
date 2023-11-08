@@ -34,7 +34,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/course/add', [CourseController::class,'store']);
     Route::post('/course/update', [CourseController::class,'update']);
     Route::post('/course/delete', [CourseController::class,'delete']);
+    Route::get('/course{cid}/enroll', [CourseController::class,'enroll'])->name('enroll');
     Route::get('/search-courses', [CourseController::class, 'search'])->name('courses.search');
     Route::get('/search-mycourses', [CourseController::class, 'searchMy'])->name('courses.searchmy');
     Route::post('/course/lesson/add', [CourseController::class,'addLesson'])->name('lesson.add');

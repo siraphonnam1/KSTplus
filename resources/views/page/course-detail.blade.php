@@ -7,7 +7,7 @@
             @elseif ($course->studens[Auth::user()->id] ?? false)
                 <button class="badge btn btn-success" disabled>Enrolled</button>
             @else
-                <button class="badge btn" style="background-color: var(--primary-color)" >Enroll</button>
+            <a href="{{ route('enroll', ['cid' => $course->id]) }}"><button class="badge btn" style="background-color: var(--primary-color)" >Enroll</button></a>
             @endif
         </div>
     </x-slot>
@@ -19,130 +19,134 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
-                @foreach ($lessons as $lesson)
-                    <div class="card p-4 mb-4">
-                        <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
-                        <div class="ps-4">
-                            <p class="mb-3" style="text-indent: 1.5em">{{ $lesson->desc }}</p>
-                            @php
-                                $strSubless = $lesson->sub_lessons;
-                                $sublesson = json_decode($strSubless);
-                            @endphp
-                            @if (!is_null($sublesson))
-                                @foreach ($sublesson as $index => $sls)
-                                    @if ($sls->type == 'text')
-                                        <div class="mb-3 flex justify-between">
-                                            <div>
-                                                <p class="fw-bold">{{ $sls->label }}</p>
-                                                <p style="text-indent: 1.5em">{{ $sls->content }}</p>
+                @if ($course->studens[Auth::user()->id] ?? false)
+                    @foreach ($lessons as $lesson)
+                        <div class="card p-4 mb-4">
+                            <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
+                            <div class="ps-4">
+                                <p class="mb-3" style="text-indent: 1.5em">{{ $lesson->desc }}</p>
+                                @php
+                                    $strSubless = $lesson->sub_lessons;
+                                    $sublesson = json_decode($strSubless);
+                                @endphp
+                                @if (!is_null($sublesson))
+                                    @foreach ($sublesson as $index => $sls)
+                                        @if ($sls->type == 'text')
+                                            <div class="mb-3 flex justify-between">
+                                                <div>
+                                                    <p class="fw-bold">{{ $sls->label }}</p>
+                                                    <p style="text-indent: 1.5em">{{ $sls->content }}</p>
+                                                </div>
+                                                <div>
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                        <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <div>
-                                                @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
-                                                    <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
-                                                @endif
+                                        @elseif ($sls->type == 'file')
+                                            <div class="mb-3 flex justify-between">
+                                                <div>
+                                                    <i class="bi bi-file-earmark bg-secondary rounded-circle p-1 text-light"></i>
+                                                    <a
+                                                        class="text-primary viewFilebtn cursor-pointer"
+                                                        data-file-path="{{ asset('uploads/sublessons/' . $sls->content) }}"
+                                                        value="{{$sls->content}}"
+                                                    >
+                                                        {{ $sls->label }}
+                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                        <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
+                                                    @endif
+                                                </div>
                                             </div>
+                                        @else
+                                            <div class="mb-3 flex justify-between">
+                                                <div>
+                                                    @if ($sls->type == 'link')
+                                                        <i class="bi bi-link bg-secondary rounded-circle p-1 text-light"></i>
+                                                    @elseif ($sls->type == 'video')
+                                                        <i class="bi bi-play-fill bg-secondary rounded-circle p-1 text-light"></i>
+                                                    @endif
+                                                    <a href="{{ $sls->content }}" target="_BLANK" class="text-primary">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span></a>
+                                                </div>
+                                                <div>
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                        <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                <div class="course-menu">
+                                    <button id="dropdownMenuIconButton{{ $lesson->id }}" data-dropdown-toggle="dropdownDots{{ $lesson->id }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                        <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Dropdown menu -->
+                                    <div id="dropdownDots{{ $lesson->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton{{ $lesson->id }}">
+                                            <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubText"  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
+                                            </li>
+                                            <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="link" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Link</button>
+                                            </li>
+                                            <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="video" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Video</button>
+                                            </li>
+                                            <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
+                                            </li>
+                                        </ul>
+                                        <div class="py-2">
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> Edit</button>
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> Delete</button>
                                         </div>
-                                    @elseif ($sls->type == 'file')
-                                        <div class="mb-3 flex justify-between">
-                                            <div>
-                                                <i class="bi bi-file-earmark bg-secondary rounded-circle p-1 text-light"></i>
-                                                <a
-                                                    class="text-primary viewFilebtn cursor-pointer"
-                                                    data-file-path="{{ asset('uploads/sublessons/' . $sls->content) }}"
-                                                    value="{{$sls->content}}"
-                                                >
-                                                    {{ $sls->label }}
-                                                    <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
-                                                </a>
-                                            </div>
-                                            <div>
-                                                @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
-                                                    <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @else
-                                        <div class="mb-3 flex justify-between">
-                                            <div>
-                                                @if ($sls->type == 'link')
-                                                    <i class="bi bi-link bg-secondary rounded-circle p-1 text-light"></i>
-                                                @elseif ($sls->type == 'video')
-                                                    <i class="bi bi-play-fill bg-secondary rounded-circle p-1 text-light"></i>
-                                                @endif
-                                                <a href="{{ $sls->content }}" target="_BLANK" class="text-primary">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span></a>
-                                            </div>
-                                            <div>
-                                                @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
-                                                    <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
+                                    </div>
+                                </div>
                             @endif
                         </div>
 
-                        @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
-                            <div class="course-menu">
-                                <button id="dropdownMenuIconButton{{ $lesson->id }}" data-dropdown-toggle="dropdownDots{{ $lesson->id }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                                    <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-                                    </svg>
-                                </button>
-                                <!-- Dropdown menu -->
-                                <div id="dropdownDots{{ $lesson->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton{{ $lesson->id }}">
-                                        <li>
-                                            <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubText"  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
-                                        </li>
-                                        <li>
-                                            <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="link" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Link</button>
-                                        </li>
-                                        <li>
-                                            <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="video" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Video</button>
-                                        </li>
-                                        <li>
-                                            <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
-                                        </li>
-                                    </ul>
-                                    <div class="py-2">
-                                        <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> Edit</button>
-                                        <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> Delete</button>
+                        {{-- edit lesson modal --}}
+                        <div class="modal fade" id="editless{{$lesson->id}}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addTopicLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content bg-dark">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title text-light fs-5" id="addTopicLabel">Edit lesson</h1>
                                     </div>
+                                    <form method="POST" action="{{ route('lesson.update') }}">
+                                        @csrf
+                                        <input type="hidden" value="{{$lesson->id}}" name="lessid">
+                                        <div class="modal-body bg-light text-dark">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="topic" value="{{ $lesson->topic }}" id="topic" required>
+                                                    <label for="topic">Topic</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="desc" value="{{ $lesson->desc }}" id="desc">
+                                                    <label for="desc">Description</label>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- edit lesson modal --}}
-                    <div class="modal fade" id="editless{{$lesson->id}}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addTopicLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content bg-dark">
-                                <div class="modal-header">
-                                    <h1 class="modal-title text-light fs-5" id="addTopicLabel">Edit lesson</h1>
-                                </div>
-                                <form method="POST" action="{{ route('lesson.update') }}">
-                                    @csrf
-                                    <input type="hidden" value="{{$lesson->id}}" name="lessid">
-                                    <div class="modal-body bg-light text-dark">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" name="topic" value="{{ $lesson->topic }}" id="topic" required>
-                                                <label for="topic">Topic</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" name="desc" value="{{ $lesson->desc }}" id="desc">
-                                                <label for="desc">Description</label>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                @else
+                        <p>Please Enroll </p>
+                @endif
 
 
                 @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
