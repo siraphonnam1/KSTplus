@@ -67,9 +67,9 @@
                                 <select class="form-select form-select-sm" name="role" id="role" disabled>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}"
-                                            @role($user->role)
+                                            @if ($user->role == $role->name)
                                                 selected
-                                            @endrole
+                                            @endif
                                         >{{ $role->name }}</option>
                                     @endforeach
                                 </select>

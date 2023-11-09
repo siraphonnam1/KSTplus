@@ -19,7 +19,7 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
-                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id))
+                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
                     @foreach ($lessons as $lesson)
                         <div class="card p-4 mb-4">
                             <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
@@ -51,6 +51,26 @@
                                                         class="text-primary viewFilebtn cursor-pointer"
                                                         data-file-path="{{ asset('uploads/sublessons/' . $sls->content) }}"
                                                         value="{{$sls->content}}"
+                                                    >
+                                                        {{ $sls->label }}
+                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                        <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @elseif ($sls->type == 'embed')
+                                            <div class="mb-3 flex justify-between">
+                                                <div>
+                                                    <i class="bi bi-file-earmark bg-secondary rounded-circle p-1 text-light"></i>
+                                                    <a
+                                                        class="text-primary viewEmbed cursor-pointer"
+                                                        value="1"
+                                                        embedTitle="{{$sls->label}}"
+                                                        embedCode="{{$sls->content}}"
                                                     >
                                                         {{ $sls->label }}
                                                         <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
@@ -103,6 +123,9 @@
                                                 <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="video" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Video</button>
                                             </li>
                                             <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="embed" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Embed<></button>
+                                            </li>
+                                            <li>
                                                 <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
                                             </li>
                                         </ul>
@@ -145,7 +168,7 @@
                         </div>
                     @endforeach
                 @else
-                        <p>Please Enroll </p>
+                    <div class="flex justify-center text-red-500"><p>Please <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">Enroll</span>in top right to get all lesson</p></div>
                 @endif
 
 
@@ -382,7 +405,7 @@
                 title: `Add ${addType}`,
                 html:
                     '<input id="swal-input1" class="swal2-input" placeholder="Enter label">' +
-                    '<input id="content" class="swal2-input" placeholder="Enter link">',
+                    '<input id="content" class="swal2-input" placeholder="Enter embed code">',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -512,19 +535,45 @@
     });
 
     const pdfButtons = document.querySelectorAll('.viewFilebtn');
-        pdfButtons.forEach((pdfbtn) => {
-            const fileNameValue = pdfbtn.value;
-            pdfbtn.addEventListener('click', function () {
-                const pdfUrl = this.getAttribute('data-file-path');
-                Swal.fire({
-                    width: '50%',
-                    html: `<div style="height: 500px;">
-                                <iframe src="${pdfUrl}" style="width: 100%; height: 100%;object-fit:cover" frameborder="0"></iframe>
-                            </div>
-                        `,
-                })
-            });
+    pdfButtons.forEach((pdfbtn) => {
+        const fileNameValue = pdfbtn.value;
+        pdfbtn.addEventListener('click', function () {
+            const pdfUrl = this.getAttribute('data-file-path');
+            Swal.fire({
+                title: fileNameValue,
+                width: '50%',
+                html: `<div style="height: 500px;">
+                            <iframe src="${pdfUrl}" style="width: 100%; height: 100%;object-fit:cover" frameborder="0"></iframe>
+                        </div>
+                    `,
+            })
         });
+    });
+
+    const viewEmbed = document.querySelectorAll('.viewEmbed');
+    viewEmbed.forEach((embbtn) => {
+        const embedTitle = embbtn.getAttribute('embedTitle');
+        const embedCode = embbtn.getAttribute('embedCode');
+        embbtn.addEventListener('click', function () {
+            const pdfUrl = this.getAttribute('data-file-path');
+            Swal.fire({
+                title: embedTitle,
+                width: '50%',
+                html: `<div class="flex justify-center items-center" >
+                            ${embedCode}
+                        </div>
+                    `,
+                    didOpen: () => {
+                        // Use a media query to adjust the width and height on smaller screens
+                        const swalModal = Swal.getPopup();
+                        if (window.matchMedia('(max-width: 650px)').matches) {
+                        swalModal.style.width = '90%'; // Example for screens smaller than 600px
+                        swalModal.style.height = '70%';
+                        }
+                    }
+            })
+        });
+    });
 </script>
 <style>
     .course-menu {

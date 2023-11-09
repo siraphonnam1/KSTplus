@@ -20,17 +20,22 @@
             <div class="flex items-center ml-2">
                 <div style="background-color: var(--primary-color)" class="p-2 rounded-pill px-4">
                     @php
-                        // Your date string
                         $dateString = Auth::user()->startlt;
 
-                        // Parse the date string into a Carbon instance
-                        $date = \Carbon\Carbon::parse($dateString);
+                        // Create a DateTime object from your date string
+                        $yourDate = DateTime::createFromFormat('Y-m-d', $dateString);
 
-                        // Get the difference in days
-                        $diffInDays = \Carbon\Carbon::now()->diffInDays($date, false);
-                        $finDay = (30 + $diffInDays) < 0 ? 0 : (30 + $diffInDays);
+                        // Get the current DateTime
+                        $now = new DateTime();
+
+                        // Calculate the difference between the dates
+                        $difference = $yourDate->diff($now);
                     @endphp
-                    <p class="text-light fw-bold">{{$finDay}} Dayleft</p>
+                    @if ($difference->invert == 0)
+                        <p class="text-white">expired</p>
+                    @else
+                        <p class="text-light fw-bold">{{ $difference->y > 0 ? $difference->y.' y ' : ''  }}{{ $difference->m > 0 ? $difference->m.' m ' : ''  }}{{ $difference->d > 0 ? $difference->d.' d ' : ''  }} Dayleft</p>
+                    @endif
                 </div>
             </div>
             <!-- Settings Dropdown -->

@@ -25,7 +25,7 @@
                                     </div>
                                 </a>
                                 <div class="course-menu">
-                                    <button class="btn btn-info btn-sm edit-btn text-white" value="{{$course->id}}" ctitle="{{ $course->title }}" cdesc="{{ $course->description}}" newPerm="{{ json_decode($course->permission)->new }}"  empPerm="{{ json_decode($course->permission)->employee }}"><i class="bi bi-gear"></i></button>
+                                    <button class="btn btn-info btn-sm edit-btn text-white" value="{{$course->id}}" ctitle="{{ $course->title }}" cdesc="{{ $course->description}}" allPerm="{{ json_decode($course->permission)->all??'' }}"  dpmPerm="{{ json_decode($course->permission)->dpm??'' }}"><i class="bi bi-gear"></i></button>
                                     <button class="btn btn-danger btn-sm delete-btn" value="{{$course->id}}"><i class="bi bi-trash"></i></button>
                                 </div>
                             </div>
@@ -61,12 +61,12 @@
 
                 <p class="mb-3">Permission</p>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="newPer" value="option1">
-                    <label class="form-check-label" for="newPer">New</label>
+                    <input class="form-check-input" type="checkbox" id="allPer" value="option1">
+                    <label class="form-check-label" for="allPer">All</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="normalPer" value="option2">
-                    <label class="form-check-label" for="normalPer">Employee</label>
+                    <input class="form-check-input" type="checkbox" id="dpmPer" value="option2">
+                    <label class="form-check-label" for="dpmPer">DpmOnly</label>
                 </div>
             `,
             showCancelButton: true,
@@ -75,8 +75,8 @@
             preConfirm: () => {
                 const topic = document.getElementById('topic').value;
                 const desc = document.getElementById('desc').value;
-                const newPer = document.getElementById('newPer').checked;
-                const normalPer = document.getElementById('normalPer').checked;
+                const allPer = document.getElementById('allPer').checked;
+                const dpmPer = document.getElementById('dpmPer').checked;
 
                 if (!topic) {
                     Swal.showValidationMessage("Topic is required");
@@ -89,7 +89,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ title: topic, desc: desc, perm: newPer, normPer: normalPer})
+                    body: JSON.stringify({ title: topic, desc: desc, allPerm: allPer, dpmPerm: dpmPer})
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -165,8 +165,8 @@
         const editId = ebtn.value;
         const etitle = ebtn.getAttribute('ctitle');
         const edesc = ebtn.getAttribute('cdesc');
-        const enew = ebtn.getAttribute('newPerm');
-        const eemp = ebtn.getAttribute('empPerm');
+        const eall = ebtn.getAttribute('allPerm');
+        const edpm = ebtn.getAttribute('dpmPerm');
         ebtn.addEventListener('click', function () {
             Swal.fire({
                 title: 'Edit Course',
@@ -182,12 +182,12 @@
 
                     <p class="mb-3">Permission</p>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="newPer" value="option1" ${enew ? 'checked' : ''}>
-                        <label class="form-check-label" for="newPer">New</label>
+                        <input class="form-check-input" type="checkbox" id="allPer" value="option1" ${eall ? 'checked' : ''}>
+                        <label class="form-check-label" for="allPer">All</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="normalPer" value="option2" ${eemp ? 'checked' : ''}>
-                        <label class="form-check-label" for="normalPer">Employee</label>
+                        <input class="form-check-input" type="checkbox" id="dpmPer" value="option2" ${edpm ? 'checked' : ''}>
+                        <label class="form-check-label" for="dpmPer">DpmOnly</label>
                     </div>
                 `,
                 showCancelButton: true,
@@ -196,8 +196,8 @@
                 preConfirm: () => {
                     const topic = document.getElementById('topic').value;
                     const desc = document.getElementById('desc').value;
-                    const newPer = document.getElementById('newPer').checked;
-                    const normalPer = document.getElementById('normalPer').checked;
+                    const allPer = document.getElementById('allPer').checked;
+                    const dpmPer = document.getElementById('dpmPer').checked;
 
                     if (!topic) {
                         Swal.showValidationMessage("Topic is required");
@@ -210,7 +210,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ title: topic, desc: desc, perm: newPer, normPer: normalPer, courseId:editId})
+                        body: JSON.stringify({ title: topic, desc: desc, allPerm: allPer, dpmPerm: dpmPer, courseId:editId})
                     })
                     .then(response => {
                         if (!response.ok) {

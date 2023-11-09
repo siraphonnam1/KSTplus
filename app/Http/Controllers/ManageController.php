@@ -186,9 +186,33 @@ class ManageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            if ($request->editType == 'agn') {
+                $agn = agency::find( $request->agnid );
+                $agn->name = $request->name;
+                $agn->address = $request->address;
+                $agn->contact = $request->contact;
+                $agn->save();
+            } elseif ($request->editType == 'brn') {
+                $brn = branch::find( $request->brnid );
+                $brn->name = $request->name;
+                $brn->agency = $request->agency;
+                $brn->save();
+            } elseif ($request->editType == 'dpm') {
+                $dpm = department::find( $request->dpmid );
+                $brn = branch::find( $request->branch );
+                $dpm->name = $request->name;
+                $dpm->branch = $request->branch;
+                $dpm->prefix = Str::upper($request->prefix);
+                $dpm->agency = $brn->agency;
+                $dpm->save();
+            }
+            return response()->json(['success' => $request->all() ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
     }
 
     /**

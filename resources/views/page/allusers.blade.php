@@ -31,16 +31,22 @@
                                     <td>
                                         @if ($user->startlt)
                                             @php
-                                                // Your date string
                                                 $dateString = $user->startlt;
 
-                                                // Parse the date string into a Carbon instance
-                                                $date = \Carbon\Carbon::parse($dateString);
+                                                // Create a DateTime object from your date string
+                                                $yourDate = DateTime::createFromFormat('Y-m-d', $dateString);
 
-                                                // Get the difference in days
-                                                $diffInDays = \Carbon\Carbon::now()->diffInDays($date, false);
+                                                // Get the current DateTime
+                                                $now = new DateTime();
+
+                                                // Calculate the difference between the dates
+                                                $difference = $yourDate->diff($now);
                                             @endphp
-                                            <p class="text-red-400">{{ 30 - abs($diffInDays) }}/30</p>
+                                            @if ($difference->invert == 0)
+                                                <p class="text-red-400">expired</p>
+                                            @else
+                                                <p class="text-sky-500">{{ $difference->y > 0 ? $difference->y.'y ' : ''  }}{{ $difference->m > 0 ? $difference->m.'m ' : ''  }}{{ $difference->d >= 0 ? $difference->d.'d ' : ''  }}</p>
+                                            @endif
                                         @else
                                             Forever
                                         @endif
@@ -57,7 +63,7 @@
                                             <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
                                             <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
                                             @if ($user->role == 'new')
-                                                <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}"><i class="bi bi-calendar2-plus"></i></button>
+                                                <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}" oldVal="{{ $user->startlt }}"><i class="bi bi-calendar2-plus"></i></button>
                                             @endif
                                         </td>
                                     @endif
@@ -237,11 +243,11 @@
 
     const rewBtns = document.querySelectorAll('#renewBtn');
     rewBtns.forEach((btn) => {
+        const doldDay = btn.getAttribute('oldVal');
         btn.addEventListener('click', () => {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
+                title: 'Choose dayleft',
+                html: `<input type="date" id="datepicker" class="swal2-input" value="${doldDay}">`,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -249,14 +255,14 @@
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     const uId = btn.value;
-
+                    const date = document.getElementById('datepicker').value;
                     return fetch('/user/renew', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
-                        body: JSON.stringify({ uid: uId})
+                        body: JSON.stringify({ uid: uId, date: date })
                     })
                     .then(response => {
                         if (!response.ok) {
@@ -266,9 +272,9 @@
                     })
                     .catch(error => {
                         Swal.showValidationMessage(
-                            `Request failed`
+                            `Request failed: ${error}`
                         )
-                    })
+                    });
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {

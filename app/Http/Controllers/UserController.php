@@ -158,7 +158,7 @@ class UserController extends Controller
     {
         try {
             $user = User::find( $request->uid );
-            $user->update(['startlt'=> date('Y-m-d') ]);
+            $user->update(['startlt'=> $request->date]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);

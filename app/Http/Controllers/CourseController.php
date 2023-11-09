@@ -34,8 +34,8 @@ class CourseController extends Controller
             $courses = course::where('dpm', $request->user()->dpm)->count();
             $courseNum = sprintf('%03d', $courses);
             $course_perm = [
-                'new'=> $request->perm ?? '',
-                'employee'=> $request->normPer ?? '',
+                'all'=> $request->allPerm ?? '',
+                'dpm'=> $request->dpmPerm ?? '',
             ];
             $course = course::create([
                 'title'=> $request->title,
@@ -60,8 +60,8 @@ class CourseController extends Controller
         try {
 
             $course_perm = [
-                'new'=> $request->perm ?? false,
-                'employee'=> $request->normPer ?? false,
+                'all'=> $request->allPerm ?? false,
+                'dpm'=> $request->dpmPerm ?? false,
             ];
             $courses = course::find( $request->courseId);
             $courses->update([
@@ -104,9 +104,8 @@ class CourseController extends Controller
             } else {
                 $courseContainer[] = (string) $course->id;
             }
-
             // ins course table -> studens
-            $oStd = is_array($course->studens) ? $course->studens : json_decode($course->studens, true);
+            $oStd = is_array($course->studens ?? []) ? $course->studens ?? [] : json_decode($course->studens, true);
             if (count($oStd) > 0) {
                 $stdContainer = $oStd;
             }
@@ -133,7 +132,7 @@ class CourseController extends Controller
         $departmentIds = $request->input('departments');
 
         // Start building the query
-        $query = course::query();
+        $query = Course::where('permission->all', true);
 
         // If a search keyword was provided, use it to filter the courses
         if ($search) {
@@ -160,15 +159,23 @@ class CourseController extends Controller
     {
         // Retrieve the search keyword and department filters from the request
         $search = $request->input('search');
-        if ($request->input('departments')) {
-            $departmentIds = [$request->user()->dpm];
+        if (!($request->input('departments'))) {
+            $departmentIds = [];
         } else {
             $departmentIds = $request->input('departments');
         }
         $userId = $request->user()->id; // Get the current user's ID
 
         // Start building the query with the initial condition for the current user
-        $query = Course::where('studens', 'LIKE', "%\"$userId\"%");
+        if ($request->user()->hasAnyRole(['admin', 'staff'])) {
+            $query = Course::where('permission->dpm', true);
+        } else {
+            $query = Course::where('permission->dpm', true)
+                        ->where(function ($query) use ($request) {
+                            $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                                ->orWhere('dpm', $request->user()->dpm);
+                        });
+        }
 
         // Nest the additional search and department conditions
         if ($search || !empty($departmentIds)) {
@@ -182,7 +189,7 @@ class CourseController extends Controller
 
                 // If department filters were provided, use them to filter the courses
                 if (!empty($departmentIds)) {
-                    $subquery->whereIn('department_id', $departmentIds);
+                    $subquery->whereIn('dpm', $departmentIds);
                 }
             });
         }
@@ -325,16 +332,26 @@ class CourseController extends Controller
         try {
             $lesson = lesson::find($request->lessId);
             $subContainer = [];
+
             if ($lesson) {
                 if (!is_null($lesson->sub_lessons)) {
                     $oldContainer = json_decode($lesson->sub_lessons);
                     foreach ($oldContainer as $key => $item) {
                         if ($key != $request->delid) {
                             $subContainer[] = $item;
+                        } else {
+                            if ($item->type == 'file') {
+                                $filePath = public_path('uploads/sublessons/' . $item->content);
+                                // Check if the file exists before attempting to delete
+                                if (File::exists($filePath)) {
+                                    File::delete($filePath);
+                                }
+                            }
                         }
                     }
                 }
             }
+
             $lesson->sub_lessons = $subContainer;
             $lesson->save();
             return response()->json(['success' => $subContainer]);

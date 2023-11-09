@@ -34,7 +34,7 @@ class HomeController extends Controller
     }
 
     public function allCourse(Request $request) {
-        $courses = course::all();
+        $courses = Course::where('permission->all', true)->get();
         $dpms = department::all();
         return view("page.allcourse", compact("courses", "dpms"));
     }
@@ -88,7 +88,12 @@ class HomeController extends Controller
     }
 
     public function classroom(Request $request) {
-        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
+        $courses = Course::where('permission->dpm', true)
+                 ->where(function ($query) use ($request) {
+                     $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                            ->orWhere('dpm', $request->user()->dpm);
+                 })->get();
+        // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
         $dpms = department::all();
         return view("page.myclassroom", compact("courses","dpms"));
     }

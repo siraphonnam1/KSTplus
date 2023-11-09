@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/addRole', [ManageController::class,'createRole']);
     Route::post('/manage/addPerm', [ManageController::class,'createPerm']);
     Route::post('/manage/delete', [ManageController::class,'deleteData']);
+    Route::post('/manage/update', [ManageController::class,'update']);
 
     //User
     Route::post('/user/register', [UserController::class,'create'])->name('user.register');

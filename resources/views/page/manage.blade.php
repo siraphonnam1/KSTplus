@@ -25,7 +25,21 @@
                                     <tbody >
                                         @foreach ($agns as $agn)
                                             <tr>
-                                                <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="agn" value="{{ $agn->id }}"><i class="bi bi-trash"></i></button></td>
+                                                <td>
+                                                    <div class="flex gap-1">
+                                                        <button class="btn btn-sm btn-danger" id="delBtn" deltype="agn" value="{{ $agn->id }}"><i class="bi bi-trash"></i></button>
+                                                        <button
+                                                            class="btn btn-sm btn-info text-white"
+                                                            id="editBtn"
+                                                            edittype="agn"
+                                                            value="{{ $agn->id }}"
+                                                            agnName="{{$agn->name}}"
+                                                            agnAddr="{{$agn->address ?? ''}}"
+                                                            agnCont="{{$agn->contact ?? ''}}">
+                                                                <i class="bi bi-gear"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
                                                 <td class="text-nowrap">{{$agn->name}}</td>
                                                 <td class="text-nowrap">{{$agn->address?? ""}}</td>
                                                 <td class="text-nowrap">{{$agn->contact?? ""}}</td>
@@ -54,7 +68,20 @@
                                     <tbody >
                                         @foreach ($brns as $brn)
                                             <tr>
-                                                <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="brn" value="{{ $brn->id }}"><i class="bi bi-trash"></i></button></td>
+                                                <td>
+                                                    <div class="flex gap-1">
+                                                        <button class="btn btn-sm btn-danger" id="delBtn" deltype="brn" value="{{ $brn->id }}"><i class="bi bi-trash"></i></button>
+                                                        <button
+                                                            class="btn btn-sm btn-info text-white"
+                                                            id="editBtn"
+                                                            edittype="brn"
+                                                            brnName="{{$brn->name}}"
+                                                            brnAgn="{{$brn->agency}}"
+                                                            value="{{ $brn->id }}">
+                                                                <i class="bi bi-gear"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
                                                 <td class="text-nowrap">{{$brn->name}}</td>
                                                 <td class="text-nowrap">{{ optional($brn->agencyName)->name }}</td>
                                             </tr>
@@ -86,7 +113,20 @@
                             <tbody >
                                 @foreach ($dpms as $dpm)
                                     <tr>
-                                        <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="dpm" value="{{ $dpm->id }}"><i class="bi bi-trash"></i></button></td>
+                                        <td>
+                                            <div class="flex gap-1">
+                                                <button class="btn btn-sm btn-danger" id="delBtn" deltype="dpm" value="{{ $dpm->id }}"><i class="bi bi-trash"></i></button>
+                                                <button class="btn btn-sm btn-info text-white"
+                                                    id="editBtn"
+                                                    edittype="dpm"
+                                                    dpmName="{{$dpm->name}}"
+                                                    dpmPrefix="{{$dpm->prefix}}"
+                                                    dpmBrn="{{$dpm->branch}}"
+                                                    value="{{ $dpm->id }}">
+                                                        <i class="bi bi-gear"></i>
+                                                </button>
+                                            </div>
+                                        </td>
                                         <td>{{$dpm->name}}</td>
                                         <td>{{$dpm->prefix}}</td>
                                             @php
@@ -649,6 +689,210 @@
                 }
             })
         })
+    })
+
+    const editBtns = document.querySelectorAll('#editBtn');
+    editBtns.forEach((editbtn) => {
+        const eid = editbtn.value;
+        const etype = editbtn.getAttribute('edittype');
+
+        if (etype == 'agn') {
+            const ename = editbtn.getAttribute('agnName');
+            const eaddr = editbtn.getAttribute('agnAddr');
+            const econt = editbtn.getAttribute('agnCont');
+            editbtn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Edit Agency',
+                    html: `
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" value="${ename}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addr" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="addr" value="${eaddr}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cont" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="cont" value="${econt}">
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: "Save",
+                    preConfirm: () => {
+                        const agnname = document.getElementById('name').value;
+                        const addr = document.getElementById('addr').value;
+                        const cont = document.getElementById('cont').value;
+
+                        if (!agnname) {
+                            Swal.showValidationMessage("Name is required");
+                            return;
+                        }
+
+                        return fetch('/manage/update', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ name: agnname, address:addr, contact:cont, agnid: eid, editType: etype})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed`
+                            )
+                        })
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log(result.value);
+                        Swal.fire(
+                            'Saved!',
+                            'Your department was saved successfully.',
+                            'success'
+                        )
+                    }
+                });
+            })
+        } else if (etype == 'brn') {
+            const brnName = editbtn.getAttribute('brnName');
+            const brnAgn = editbtn.getAttribute('brnAgn');
+            editbtn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Add Branch',
+                    html: `
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" value="${brnName}">
+                        </div>
+
+                        <label for="agn" class="form-label">Agency</label>
+                        <select class="form-select" aria-label="Default select example" id="agn" value="${brnAgn}">
+                            @foreach ($agns as $agn)
+                                <option value="{{$agn->id}}">{{$agn->name}}</option>
+                            @endforeach
+                        </select>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: "Save",
+                    preConfirm: () => {
+                        const brnname = document.getElementById('name').value;
+                        const agn = document.getElementById('agn').value;
+
+                        if (!brnname) {
+                            Swal.showValidationMessage("Name is required");
+                            return;
+                        }
+
+                        return fetch('/manage/update', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ name: brnname, agency:agn,  brnid: eid, editType: etype})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed`
+                            )
+                        })
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log(result.value);
+                        Swal.fire(
+                            'Saved!',
+                            'Your department was saved successfully.',
+                            'success'
+                        )
+                    }
+                });
+            })
+        } else if (etype == 'dpm') {
+            const dpmName = editbtn.getAttribute('dpmName');
+            const dpmPrefix = editbtn.getAttribute('dpmPrefix');
+            const dpmBrn = editbtn.getAttribute('dpmBrn');
+            editbtn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Add Department',
+                    html: `
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" value="${dpmName}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prefix" class="form-label">Prefix</label>
+                            <input type="text" class="form-control" id="prefix" value="${dpmPrefix}">
+                        </div>
+
+                        <label for="brn" class="form-label">Branch</label>
+                        <select class="form-select" aria-label="Default select example" id="brn" value="${dpmBrn}">
+                            @foreach ($brns as $brn)
+                                <option value="{{$brn->id}}">{{$brn->name}}</option>
+                            @endforeach
+                        </select>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Save',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (name) => {
+                        const dpmname = document.getElementById('name').value;
+                        const prefix = document.getElementById('prefix').value;
+                        const brn = document.getElementById('brn').value;
+
+                        if (!dpmname || !prefix ) {
+                            Swal.showValidationMessage("Name or prefix is required");
+                            return;
+                        }
+
+                        return fetch('/manage/update', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ name: dpmname, branch:brn, prefix:prefix, dpmid: eid, editType: etype })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed`
+                            )
+                        })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log(result.value);
+                        Swal.fire(
+                            'Saved!',
+                            'Your department was saved successfully.',
+                            'success'
+                        )
+                    }
+                });
+            })
+        }
+
     })
 </script>
 
