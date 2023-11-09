@@ -19,7 +19,7 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
-                @if ($course->studens[Auth::user()->id] ?? false)
+                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id))
                     @foreach ($lessons as $lesson)
                         <div class="card p-4 mb-4">
                             <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
