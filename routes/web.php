@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/renew', [UserController::class,'renew']);
     Route::post('/user/add/course', [UserController::class,'addCourse']);
     Route::post('/user/remove/course', [UserController::class,'removeCourse']);
+    Route::post('/progress/add/', [UserController::class,'addProgress']);
 
     // course
     Route::post('/course/add', [CourseController::class,'store']);
@@ -81,6 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/course/lesson/update', [CourseController::class,'updateLesson'])->name('lesson.update');
     Route::post('/lesson/sublesson/add', [CourseController::class,'subLessAdd']);
     Route::post('/lesson/sublesson/delete', [CourseController::class,'subLessDel']);
+    Route::get('/courses/search/dpm', [CourseController::class, 'searchDpm'])->name('courses.search.dpm');
+
+
 });
 
 require __DIR__.'/auth.php';

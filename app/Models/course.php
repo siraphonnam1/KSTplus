@@ -18,6 +18,7 @@ class course extends Model
         "dpm",
         "studens",
         "code",
+        "img"
     ] ;
 
     public function getStudensAttribute($value)

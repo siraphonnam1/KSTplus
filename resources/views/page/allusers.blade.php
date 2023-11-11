@@ -20,14 +20,18 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            @foreach ($users as $user)
+                            @foreach ($users as $index => $user)
                                 <tr>
-                                    <td>1</td>
+                                    <td>{{$index+1}}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->role }}</td>
                                     <td>{{ optional($user->dpmName)->name }}</td>
-                                    <td>12</td>
-                                    <td>0</td>
+                                    <td>{{ count($user->courses ?? []) }}</td>
+                                    <td>
+                                        @php
+                                            echo App\Models\course::where('teacher', $user->id)->count();
+                                        @endphp
+                                    </td>
                                     <td>
                                         @if ($user->startlt)
                                             @php

@@ -24,7 +24,7 @@
                         <div class="card p-4 mb-4">
                             <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
                             <div class="ps-4">
-                                <p class="mb-3" style="text-indent: 1.5em">{{ $lesson->desc }}</p>
+                                <p class="mb-3" style="text-indent: 1.5em">{!! $lesson->desc !!}</p>
                                 @php
                                     $strSubless = $lesson->sub_lessons;
                                     $sublesson = json_decode($strSubless);
@@ -48,8 +48,10 @@
                                                 <div>
                                                     <i class="bi bi-file-earmark bg-secondary rounded-circle p-1 text-light"></i>
                                                     <a
-                                                        class="text-primary viewFilebtn cursor-pointer"
+                                                        class="text-primary viewFilebtn cursor-pointer chapter"
                                                         data-file-path="{{ asset('uploads/sublessons/' . $sls->content) }}"
+                                                        data-cid="{{ $course->id }}"
+                                                        data-lessid="{{ $lesson->id }}"
                                                         value="{{$sls->content}}"
                                                     >
                                                         {{ $sls->label }}
@@ -65,10 +67,12 @@
                                         @elseif ($sls->type == 'embed')
                                             <div class="mb-3 flex justify-between">
                                                 <div>
-                                                    <i class="bi bi-file-earmark bg-secondary rounded-circle p-1 text-light"></i>
+                                                    <i class="bi bi-code-slash bg-secondary rounded-circle p-1 text-light"></i>
                                                     <a
-                                                        class="text-primary viewEmbed cursor-pointer"
+                                                        class="text-primary viewEmbed cursor-pointer chapter"
                                                         value="1"
+                                                        data-cid="{{ $course->id }}"
+                                                        data-lessid="{{ $lesson->id }}"
                                                         embedTitle="{{$sls->label}}"
                                                         embedCode="{{$sls->content}}"
                                                     >
@@ -90,7 +94,12 @@
                                                     @elseif ($sls->type == 'video')
                                                         <i class="bi bi-play-fill bg-secondary rounded-circle p-1 text-light"></i>
                                                     @endif
-                                                    <a href="{{ $sls->content }}" target="_BLANK" class="text-primary">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span></a>
+                                                    <a href="{{ $sls->content }}"
+                                                        target="_BLANK"
+                                                        class="text-primary chapter"
+                                                        data-cid="{{ $course->id }}"
+                                                        data-lessid="{{ $lesson->id }}">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                    </a>
                                                 </div>
                                                 <div>
                                                     @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
@@ -200,6 +209,17 @@
                                                     <input type="text" class="form-control" name="desc" id="desc">
                                                     <label for="desc">Description</label>
                                                 </div>
+                                                {{-- <div>
+                                                    <textarea id="editor" name="desc"></textarea>
+                                                    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+                                                    <script>
+                                                        ClassicEditor
+                                                            .create( document.querySelector( '#editor' ) )
+                                                            .catch( error => {
+                                                                console.error( error );
+                                                            } );
+                                                    </script>
+                                                </div> --}}
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -216,7 +236,7 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <div class="card p-4">
-                    <p class="text-center fw-bold fs-5 mb-4">About</p>
+                    <p class="text-center fw-bold fs-5 mb-4">Course Feature</p>
                     <p><b>Course ID: </b> {{ $course->code }}</p>
                     <p><b>Lecturer: </b> {{ $course->getTeacher->name }}</p>
                     <p><b>Dpm: </b> {{ $course->getDpm->name }}</p>
@@ -236,6 +256,33 @@
     </div>
 </x-app-layout>
 <script>
+    $(document).ready(function() {
+        $('.chapter').click(function() {
+            // Get the notification ID from the data attribute
+            var cid = $(this).data('cid');
+            var lessid = $(this).data('lessid');
+
+            // Send an AJAX request to mark the notification as read
+            $.ajax({
+                url: '/progress/add/', // You need to define this route in your web.php
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'), // Add CSRF token
+                    cid: cid,
+                    lessid: lessid
+                },
+                success: function(response) {
+                    // You can add some code here to handle a successful response
+                    console.log(response['message']);
+                },
+                error: function(error) {
+                    // You can add some error handling here
+                    console.log('Error');
+                }
+            });
+        });
+    });
+
     const delBtn = document.querySelectorAll(".delete-btn");
     delBtn.forEach((btn) => {
         const delId = btn.value;

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Models\User;
 use App\Models\course;
+use App\Models\progress;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 Use Alert;
@@ -230,4 +231,32 @@ class UserController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
+
+    public function addProgress(Request $request) {
+        try {
+            $cid = $request->input('cid');
+            $lessid = $request->input('lessid');
+            $userId = $request->user()->id;
+
+            // Check if the progress already exists
+            $progressExists = progress::where('course_id', $cid)
+                                      ->where('lesson_id', $lessid)
+                                      ->where('user_id', $userId)
+                                      ->exists();
+
+            if (!$progressExists) {
+                // Only create a new record if it does not exist
+                progress::create(['course_id' => $cid, 'lesson_id' => $lessid, 'user_id' => $userId]);
+                return response()->json(['message' => 'Progress added']);
+            } else {
+                // Return a message indicating that the progress already exists
+                return response()->json(['message' => 'Progress already exists']); // 409 Conflict
+            }
+
+        } catch (\Throwable $th) {
+            // Handle exceptions and return an error message
+            return response()->json(['message' => $th->getMessage()], 500); // 500 Internal Server Error
+        }
+    }
+
 }

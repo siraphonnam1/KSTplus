@@ -24,12 +24,68 @@ class CourseController extends Controller
 
     }
 
+    public function searchDpm(Request $request)
+    {
+        $search = $request->get('search');
+
+        // search in title
+        $courses1 = course::where('permission->dpm', "true")
+                        ->where(function ($query) use ($request) {
+                            $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                                ->orWhere('dpm', $request->user()->dpm);
+                        })
+                        // Add your search condition here before paginate
+                        ->when($search, function ($query) use ($search) {
+                            return $query->where('title', 'like', '%'.$search.'%');
+                        });
+
+        // search in course code
+        $courses2 = course::where('permission->dpm', "true")
+                        ->where(function ($query) use ($request) {
+                            $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                                ->orWhere('dpm', $request->user()->dpm);
+                        })
+                        // Add your search condition here before paginate
+                        ->when($search, function ($query) use ($search) {
+                            return $query->where('code', 'like', '%'.$search.'%');
+                        })->union($courses1);
+
+        // query
+        $courses = $courses2->paginate(12);
+
+        return view('partials.courses', compact('courses'));
+    }
+
+
     public function store(Request $request) {
         $request->validate([
             'desc' => ['string', 'max:20000'],
             'title' => ['required', 'string', 'max:5000'],
         ]);
+        if ($request->hasFile('cimg')) {
+            $request->validate([
+                'cimg' => ['file','mimes:jpeg,png,jpg','max:10240'], // 10MB max size, adjust as needed
+            ]);
+        }
+
         try {
+            if ($request->hasFile('cimg')) {
+                $file = $request->file('cimg');
+                $filename = time(). '_' . $file->getClientOriginalName(); // Unique name
+
+                // Define the path within the public directory where you want to store the files
+                $destinationPath = public_path('uploads/course_imgs');
+
+                // Check if the directory exists, if not, create it
+                if (!File::isDirectory($destinationPath)) {
+                    File::makeDirectory($destinationPath, 0755, true);
+                }
+
+                // Move the file to the public directory
+                $file->move($destinationPath, $filename);
+            }
+
+
             $dpmName = department::find($request->user()->dpm);
             $courses = course::where('dpm', $request->user()->dpm)->count();
             $courseNum = sprintf('%03d', $courses);
@@ -44,6 +100,7 @@ class CourseController extends Controller
                 'teacher' => $request->user()->id,
                 'dpm' => $request->user()->dpm,
                 'code' => ($dpmName->prefix).($courseNum),
+                'img' => $filename ?? null,
             ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
@@ -56,20 +113,47 @@ class CourseController extends Controller
             'courseId' => ['required', 'max:255'],
             'desc' => ['string', 'max:20000'],
             'title' => ['required', 'string', 'max:5000'],
+            'cimg' => ['required','file','mimes:jpeg,png,jpg','max:10240'],
         ]);
         try {
+            if ($request->hasFile('cimg')) {
+                $file = $request->file('cimg');
+                $filename = time(). '_' . $file->getClientOriginalName(); // Unique name
+
+                // Define the path within the public directory where you want to store the files
+                $destinationPath = public_path('uploads/course_imgs');
+
+                // Check if the directory exists, if not, create it
+                if (!File::isDirectory($destinationPath)) {
+                    File::makeDirectory($destinationPath, 0755, true);
+                }
+
+                // Move the file to the public directory
+                $file->move($destinationPath, $filename);
+            }
 
             $course_perm = [
                 'all'=> $request->allPerm ?? false,
                 'dpm'=> $request->dpmPerm ?? false,
             ];
             $courses = course::find( $request->courseId);
-            $courses->update([
-                'permission'=> json_encode($course_perm),
-                'title'=> $request->title,
+            $updateData = [
+                'permission' => json_encode($course_perm),
+                'title' => $request->title,
                 'description' => $request->desc,
-                'dpm'=> $request->user()->dpm,
-            ]);
+                'dpm' => $request->user()->dpm,
+            ];
+
+            if ($request->hasFile('cimg')) {
+                $updateData['img'] = $filename;
+                $filePath = public_path('uploads/course_imgs/' . $courses->img);
+                // Check if the file exists before attempting to delete
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
+            }
+
+            $courses->update($updateData);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -80,7 +164,13 @@ class CourseController extends Controller
         try {
             $status = '';
             if ($request->deltype == 'course') {
-                course::find($request->delid)->delete();
+                $courses = course::find($request->delid);
+                $filePath = public_path('uploads/course_imgs/' . $courses->img);
+                // Check if the file exists before attempting to delete
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
+                $courses->delete();
             } else if ($request->deltype == 'lesson') {
                 lesson::find($request->delid)->delete();
             }
@@ -211,7 +301,6 @@ class CourseController extends Controller
             'topic' => ['required', 'string', 'max:5000'],
             'courseid' => ['required', 'string', 'max:255'],
         ]);
-
         try {
             $lesson = lesson::create([
                 'topic'=> $request->topic,

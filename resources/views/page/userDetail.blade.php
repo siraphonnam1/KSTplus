@@ -92,18 +92,37 @@
                             <table class="table table-hover" id="course-datatable">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th scope="col">#</th>
+                                        <th scope="col">Action</th>
                                         <th scope="col">code</th>
                                         <th scope="col" colspan="3" >Course name</th>
+                                        <th scope="col">Progress</th>
                                         <th scope="col">Enroll date</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     @foreach ($ucourse as $course)
+                                        @php
+                                            $prog_finish = App\Models\progress::where('user_id', $id)->where('course_id', $course->id)->count();
+                                            $less_all = App\Models\lesson::where('course', $course->id)->count();
+                                            if ($less_all != 0) {
+                                                $prog_avg = $prog_finish * 100 / $less_all;
+                                            } else {
+                                                $prog_avg = 0;
+                                            }
+                                        @endphp
                                         <tr>
                                             <th scope="row"><button class="text-danger delete-btn" value="{{ $course->id }}" userId="{{ $user->id }}"><i class="bi bi-trash"></i></button></th>
                                             <td>{{ $course->code }}</td>
                                             <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ Str::limit($course->title, 60) }}</td>
+                                            <td>
+                                                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar bg-success" style="width: {{$prog_avg}}%">{{$prog_avg}}%</div>
+                                                </div>
+                                                {{-- {{$prog_avg}}%
+                                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                                    <div class="bg-green-600 h-2.5 rounded-full dark:bg-green-500" style="width: {{$prog_avg}}%"></div>
+                                                </div> --}}
+                                            </td>
                                             <td>
                                                 {{ $course->studens[$user->id] ?? '' }}
                                             </td>

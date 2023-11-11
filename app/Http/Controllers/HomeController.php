@@ -8,6 +8,7 @@ use App\Models\agency;
 use App\Models\branch;
 use App\Models\lesson;
 use App\Models\department;
+use App\Models\progress;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\course;
@@ -29,12 +30,12 @@ class HomeController extends Controller
      */
     public function courseDetail(Request $request, $id) {
         $lessons = lesson::where("course", $id)->get();
-        $course = Course::find($id);
+        $course = course::find($id);
         return view("page.course-detail", compact("id", "lessons", "course"));
     }
 
     public function allCourse(Request $request) {
-        $courses = Course::where('permission->all', true)->get();
+        $courses = course::where('permission->all', true)->get();
         $dpms = department::all();
         return view("page.allcourse", compact("courses", "dpms"));
     }
@@ -45,7 +46,12 @@ class HomeController extends Controller
         if ($request->user()->role == "new") {
             return redirect()->route('home');
         } else {
-            return view("page.main", compact("courses", "dpms"));
+            $allcourses = course::where('permission->all', "true")->take(8)->get();
+            $dpmcourses = course::where('permission->dpm', "true")
+                 ->where(function ($query) use ($request) {
+                     $query->Where('dpm', $request->user()->dpm);
+                 })->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+            return view("page.main", compact("allcourses", "dpms", "dpmcourses"));
         }
     }
 
@@ -88,11 +94,11 @@ class HomeController extends Controller
     }
 
     public function classroom(Request $request) {
-        $courses = Course::where('permission->dpm', true)
+        $courses = course::where('permission->dpm', "true")
                  ->where(function ($query) use ($request) {
                      $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
                             ->orWhere('dpm', $request->user()->dpm);
-                 })->get();
+                 })->paginate(12);
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
         $dpms = department::all();
         return view("page.myclassroom", compact("courses","dpms"));

@@ -9,11 +9,11 @@
                     @if (count($courses) > 0)
                         @foreach ($courses as $course)
                             {{-- course card --}}
-                            <div class="shadow-sm card mb-3 course-card p-2">
+                            <div class="shadow-sm card mb-3 course-card">
                                 <a href="{{route('course.detail', ['id' => $course->id])}}">
                                     <div class="row g-0">
-                                        <div class="col-md-4 d-flex align-items-center">
-                                            <img src="/img/logo.png" class="img-fluid rounded-start w-100 h-100 object-fit-contain" alt="...">
+                                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
                                         </div>
                                         <div class="col-md-8">
                                             <div class="card-body">
@@ -68,6 +68,16 @@
                     <input class="form-check-input" type="checkbox" id="dpmPer" value="option2">
                     <label class="form-check-label" for="dpmPer">DpmOnly</label>
                 </div>
+                <div class="flex items-center justify-center w-full mt-2">
+                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                            <p class="mb-2 font-bold">Course image</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">jpeg,png  (MAX 10Mb size)</p>
+                        </div>
+                        <input id="dropzone-file" type="file" class="hidden" />
+                    </label>
+                </div>
             `,
             showCancelButton: true,
             confirmButtonText: "Save",
@@ -77,19 +87,25 @@
                 const desc = document.getElementById('desc').value;
                 const allPer = document.getElementById('allPer').checked;
                 const dpmPer = document.getElementById('dpmPer').checked;
+                const fileInput = document.getElementById('dropzone-file');
 
                 if (!topic) {
                     Swal.showValidationMessage("Topic is required");
                     return;
                 }
+                const formData = new FormData();
+                formData.append('title', topic);
+                formData.append('desc', desc);
+                formData.append('allPerm', allPer);
+                formData.append('dpmPerm', dpmPer);
+                formData.append('cimg', fileInput.files[0]);
+
+                // Add your CSRF token
+                formData.append('_token', '{{ csrf_token() }}');
 
                 return fetch('/course/add', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ title: topic, desc: desc, allPerm: allPer, dpmPerm: dpmPer})
+                    body: formData
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -189,6 +205,16 @@
                         <input class="form-check-input" type="checkbox" id="dpmPer" value="option2" ${edpm ? 'checked' : ''}>
                         <label class="form-check-label" for="dpmPer">DpmOnly</label>
                     </div>
+                    <div class="flex items-center justify-center w-full mt-2">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                                <p class="mb-2 font-bold">Course image</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">jpeg,png  (MAX 10Mb size)</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" />
+                        </label>
+                    </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: "Save",
@@ -198,19 +224,30 @@
                     const desc = document.getElementById('desc').value;
                     const allPer = document.getElementById('allPer').checked;
                     const dpmPer = document.getElementById('dpmPer').checked;
+                    const fileInput = document.getElementById('dropzone-file');
 
                     if (!topic) {
                         Swal.showValidationMessage("Topic is required");
                         return;
                     }
 
+                    const formData = new FormData();
+                    formData.append('title', topic);
+                    formData.append('desc', desc);
+                    formData.append('allPerm', allPer);
+                    formData.append('dpmPerm', dpmPer);
+                    formData.append('courseId', editId);
+                    formData.append('cimg', fileInput.files[0]);
+
+                    // Add your CSRF token
+                    formData.append('_token', '{{ csrf_token() }}');
+
                     return fetch('/course/update', {
                         method: 'POST',
+                        body: formData,
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ title: topic, desc: desc, allPerm: allPer, dpmPerm: dpmPer, courseId:editId})
+                            'Accept': 'application/json', // This tells the server you expect JSON in return
+                        }
                     })
                     .then(response => {
                         if (!response.ok) {
@@ -219,6 +256,7 @@
                         return response.json()
                     })
                     .catch(error => {
+                        console.log(error);
                         Swal.showValidationMessage(
                             `Request failed`
                         )
@@ -273,5 +311,10 @@
     .course-card:hover > .course-menu {
         animation: fin 1s;
         display: unset;
+    }
+    .coursebg {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
     }
 </style>

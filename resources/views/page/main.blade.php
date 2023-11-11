@@ -1,103 +1,142 @@
 <x-app-layout>
     <header class="position-relative">
-        <div class="container h-100 pt-5">
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <h2 class="text-xl text-light fw-bold mb-3">
-                    {{ __('Search Course') }}
-                </h2>
-                <div class="search-container">
-                    <form action="" method="post">
-                        @csrf
-                        <div class="input-group input-group-sm mb-3 ">
-                            <input type="text" class="form-control search-input" placeholder="Search" aria-label="Recipient's username" >
-                            <button class="btn btn-info bg-info search-btn" type="button">Search</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="position-absolute top-100 start-50 translate-middle badge bg-light shadow dpmList">
-            <div class="d-flex flex-wrap gap-4 justify-content-center p-4" style="color:black">
-                @foreach ($dpms as $dpm)
-                    <form id="department-form-{{ $dpm->id }}" action="{{ route('courses.search') }}" method="GET">
-                        @csrf
-                        <input type="hidden" name="departments[]" value="{{ $dpm->id }}">
-                        <a href="javascript:void(0);" onclick="document.getElementById('department-form-{{ $dpm->id }}').submit();">
-                            <div class="d-flex flex-column justify-content-center align-items-center gap-1 dpm-hover p-2 rounded">
-                                <img src="/img/icondpm/dpm2.png" class="dpmicon" width="60" alt="">
-                                <p class="fw-bold fs-6">{{ $dpm->name }}</p>
-                            </div>
-                        </a>
-                    </form>
-                @endforeach
-            </div>
-        </div>
+
     </header>
-    <div class="text-center">
-        <p class="fs-1 fw-bold">Lastest Courses</p>
-    </div>
-    <div class="py-12">
+    <div class="">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
-                <div class="d-flex flex-wrap gap-5 justify-content-center mb-4">
-                    @foreach ($courses as $course)
-                        <div class="card shadow-xl shadow-orange-500/50 border-0" style="width: 18rem;">
-                            <div class="card-header" style="background-color: var(--primary-color)">
-                                <img class="bg-light py-1 rounded" src="/img/logo.png" alt="" width="80">
+            <div class="my-10">
+                <p class="text-3xl font-bold">Knowledge Service Training</p>
+            </div>
+
+            {{-- all course carousel --}}
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5">
+                <div class="mb-3 flex justify-between">
+                    <p class="text-xl fw-bold">Lastest All Courses ({{ count($allcourses ?? []) }})</p>
+                    <a href="{{route('course.all')}}" class="btn btn-sm btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
+                </div>
+                <div class="owl-carousel">
+                    @foreach ($allcourses as $course)
+                    <div class="item">
+                        <div class="card w-100" style="height: 200px">
+                            <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
+                            <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                {{-- course Img --}}
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">By: {{ optional($course->getDpm)->name }}</span>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">{{ Str::limit($course->title, 60) }}</h5>
-                                <p class="card-title fw-bold" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p>
-                                <p class="card-text text-gray-500 fs-6 mb-2">{{ Str::limit($course->description, 75) }}</p>
+                            <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
+                                <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
+                                {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
+                                <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
                             </div>
-                            <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
-                                <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="btn btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
-                            </div>
+                            {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
+                                <a href="" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
+                            </div> --}}
                         </div>
+                    </div>
                     @endforeach
                 </div>
-                <div class="d-flex justify-content-end">
-                    <a href="{{route('course.all')}}" class="btn btn-success">See more <i class="bi bi-chevron-double-right"></i></a>
+            </div>
+
+            {{-- Dpm course carousel --}}
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+                <div class="mb-3 flex justify-between">
+                    <p class="text-xl fw-bold">Lastest Dpm Courses ({{ count($dpmcourses ?? []) }})</p>
+                    <a href="{{route('classroom')}}" class="btn btn-sm btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
+                </div>
+                <div class="owl-carousel">
+                    @foreach ($dpmcourses as $course)
+                    <div class="item">
+                        <div class="card w-100" style="height: 200px">
+                            <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
+                            <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                {{-- course Img --}}
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">By: {{ optional($course->getDpm)->name }}</span>
+                            </div>
+                            <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
+                                <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
+                                {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
+                                <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
+                            </div>
+                            {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
+                                <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
+                            </div> --}}
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+<script>
+    $(document).ready(function(){
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 10,
+            autoplay: true,
+            autoplayTimeout:3000,
+            autoplaySpeed: 1000,
+            autoplayHoverPause: true,
+            nav: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 4
+                }
+            }
+        });
+    });
 
+    // Array of colors
+    const colors = ['#004e92', '#C70039', '#009473', '#5A189A', '#36454F', '#008080', '#4B0082', '#228B22', '#800000', '#4169E1'];
+
+    // Select all card-body elements
+    const cards = document.querySelectorAll('.card-body');
+
+    // Assign colors to each card in a loop
+    cards.forEach((card, index) => {
+        card.style.backgroundColor = colors[index % colors.length];
+    });
+
+</script>
 <style>
-    header {
-        background-color: var(--primary-color);
-        height: 350px;
-        margin-bottom: 250px;
-
-    }
-    .search-input {
-        border: unset;
-        border-radius: 100px 0px 0px 100px !important;
-    }
-    .search-btn {
-        border-radius: 0px 100px 100px 0px !important;
-    }
-
-    .dpmicon {
-        color: var(--primary-color);
-    }
-    .dpm-hover {
-        transition: all .4s;
-    }
-    .dpm-hover:hover{
-        box-shadow: 0px 0px 5px .4px rgba(126, 126, 126, 0.5);
-        transform: scale(1.1);
-        cursor: pointer;
-    }
-    .search-container {
-        width: 400px;
-    }
-    @media screen and (max-width: 500px) {
-        .search-container {
-            width: 200px;
-        }
-    }
-
-
+.hoverbg {
+    display: none;
+    border-radius: 5px;
+    transition: 1s;
+}
+.card:hover >.hoverbg {
+    display: flex;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-weight: 800;
+    width: 100%;
+    height: 100%;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+@-webkit-keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+.card-header {
+    height: 100px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
 </style>
