@@ -40,40 +40,6 @@
                 <div>
                     {{ $courses->appends(request()->input())->links('vendor.pagination.tailwind') }}
                 </div>
-                {{-- <div class="col-md-4 col-lg-4 px-4 col-sm-12">
-                    <div class="card p-4 border-0 shadow-sm">
-                        <form action="{{ route('courses.searchmy') }}" method="GET">
-                             @csrf
-                            <div class="p-2 text-center fw-bold fs-4"><p>Filters <i class="bi bi-filter-left"></i></p></div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control rounded" id="floatingInput" name="search" value="{{$search ?? ''}}" placeholder="name@example.com">
-                                <label for="floatingInput"><i class="bi bi-search"></i> Search</label>
-                            </div>
-
-                            @hasanyrole('staff|admin')
-                                <p class="mb-2">Dpartment:</p>
-                                <div class="d-flex flex-wrap ps-2">
-
-                                    @foreach ($dpms as $dpm)
-                                        <div class="w-50">
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="departments[]" type="checkbox" value="{{ $dpm->id }}" id="flexCheckDefault"
-                                                    @if (in_array($dpm->id, $departmentIds ?? []))
-                                                        checked
-                                                    @endif
-                                                >
-                                                <label class="form-check-label" for="flexCheckDefault" >
-                                                    {{ $dpm->name }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endhasanyrole
-                            <button class="btn btn-info w-100 mt-2" type="submit"><i class="bi bi-search"></i> Search</button>
-                        </form>
-                    </div>
-                </div> --}}
             </div>
         </div>
     </div>

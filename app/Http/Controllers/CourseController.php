@@ -56,6 +56,20 @@ class CourseController extends Controller
         return view('partials.courses', compact('courses'));
     }
 
+    public function searchAll(Request $request)
+    {
+        $search = $request->get('search');
+
+        // search in title
+        $courses = course::where('permission->all', "true")
+                        ->where(function ($query) use ($search) {
+                            $query->where('title', 'like', '%'.$search.'%')
+                                ->orWhere('code', 'like', '%'.$search.'%');
+                        })->paginate(12);
+
+        return view('partials.courses', compact('courses'));
+    }
+
 
     public function store(Request $request) {
         $request->validate([

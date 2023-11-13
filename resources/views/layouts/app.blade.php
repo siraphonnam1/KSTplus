@@ -42,7 +42,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 " style="background-color: var(--bg-color);">
+        <div class="min-h-screen bg-gray-100 flex flex-col justify-between" style="background-color: var(--bg-color);">
             @if (Auth::user()->role == 'new')
                 @include('layouts.navigation')
             @else
@@ -58,13 +58,13 @@
             @endif
 
             <!-- Page Content -->
-            <main style="min-height: 62vh; background-color: var(--bg-color);">
+            <main style="background-color: var(--bg-color);" class="flex-auto">
                 {{ $slot }}
             </main>
-            <footer class="flex mt-5 w-100 justify-around w-full bg-white shadow p-4 flex-wrap">
+            <footer class="flex mt-5 justify-around w-full bg-white p-2 flex-wrap">
                 <div class="flex gap-2 align-items-center justify-center flex-wrap mb-2">
                     <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
-                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
+                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด <br> 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
                 <div class="text-center flex items-center">
                     <p>Powered by © 2023 KST ID System</p>

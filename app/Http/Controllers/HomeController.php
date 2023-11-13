@@ -35,9 +35,8 @@ class HomeController extends Controller
     }
 
     public function allCourse(Request $request) {
-        $courses = course::where('permission->all', true)->get();
-        $dpms = department::all();
-        return view("page.allcourse", compact("courses", "dpms"));
+        $courses = course::where('permission->all', "true")->paginate(12);
+        return view("page.allcourse", compact("courses"));
     }
 
     public function main(Request $request) {

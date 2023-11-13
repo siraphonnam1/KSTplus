@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/lesson/sublesson/add', [CourseController::class,'subLessAdd']);
     Route::post('/lesson/sublesson/delete', [CourseController::class,'subLessDel']);
     Route::get('/courses/search/dpm', [CourseController::class, 'searchDpm'])->name('courses.search.dpm');
+    Route::get('/courses/search/all', [CourseController::class, 'searchAll'])->name('courses.search.all');
 
 
 });

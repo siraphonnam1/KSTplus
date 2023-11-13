@@ -5,14 +5,14 @@
     <div class="">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="my-10">
-                <p class="text-3xl font-bold">Knowledge Service Training</p>
+                <p class="text-xl ms-4 sm:text-3xl font-bold">Knowledge Service Training</p>
             </div>
 
             {{-- all course carousel --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5">
                 <div class="mb-3 flex justify-between">
-                    <p class="text-xl fw-bold">Lastest All Courses ({{ count($allcourses ?? []) }})</p>
-                    <a href="{{route('course.all')}}" class="btn btn-sm btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
+                    <p class="text-md sm:text-xl fw-bold">All Courses</p>
+                    <a href="{{route('course.all')}}" class="btn btn-sm text-xs sm:text-md btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
                 </div>
                 <div class="owl-carousel">
                     @foreach ($allcourses as $course)
@@ -21,7 +21,7 @@
                             <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
                             <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
                                 {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">By: {{ optional($course->getDpm)->name }}</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                             </div>
                             <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
                                 <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
@@ -40,8 +40,8 @@
             {{-- Dpm course carousel --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
                 <div class="mb-3 flex justify-between">
-                    <p class="text-xl fw-bold">Lastest Dpm Courses ({{ count($dpmcourses ?? []) }})</p>
-                    <a href="{{route('classroom')}}" class="btn btn-sm btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
+                    <p class="text-md sm:text-xl fw-bold">Dpm Courses</p>
+                    <a href="{{route('classroom')}}" class="btn btn-sm text-xs sm:text-md btn-primary">See more <i class="bi bi-chevron-double-right"></i></a>
                 </div>
                 <div class="owl-carousel">
                     @foreach ($dpmcourses as $course)
@@ -50,7 +50,7 @@
                             <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
                             <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
                                 {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">By: {{ optional($course->getDpm)->name }}</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                             </div>
                             <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
                                 <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
@@ -74,8 +74,8 @@
             loop: true,
             margin: 10,
             autoplay: true,
-            autoplayTimeout:3000,
-            autoplaySpeed: 1000,
+            autoplayTimeout:4000,
+            autoplaySpeed: 2000,
             autoplayHoverPause: true,
             nav: false,
             responsive: {
