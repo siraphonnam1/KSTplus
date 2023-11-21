@@ -54,7 +54,7 @@
                                 </svg>
                             </button>
                         </h2>
-                        <div id="accordion-open-body{{$index}}" class="hidden" aria-labelledby="accordion-open-heading{{$index}}">
+                        <div id="accordion-open-body{{$index}}" class="hidden px-2" aria-labelledby="accordion-open-heading{{$index}}">
                             <div class="overflow-x-scroll px-3.5 md:px-8 py-4 border border-t-0 border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50">
                                 <div class="flex gap-4 mb-2 flex-wrap">
                                     <p ><b>Type:</b> &nbsp;{{$quest->type ? 'Multiple choice' : 'Short answer'}}</p>
