@@ -119,8 +119,8 @@
                                                     <div class="progress-bar bg-success" style="width: {{$prog_avg}}%">{{$prog_avg}}%</div>
                                                 </div>
                                                 {{-- {{$prog_avg}}%
-                                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                                    <div class="bg-green-600 h-2.5 rounded-full dark:bg-green-500" style="width: {{$prog_avg}}%"></div>
+                                                <div class="w-full bg-gray-200 rounded-full h-2.5 ">
+                                                    <div class="bg-green-600 h-2.5 rounded-full " style="width: {{$prog_avg}}%"></div>
                                                 </div> --}}
                                             </td>
                                             <td>

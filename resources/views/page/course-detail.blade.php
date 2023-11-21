@@ -141,36 +141,36 @@
 
                             @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
                                 <div class="course-menu">
-                                    <button id="dropdownMenuIconButton{{ $lesson->id }}" data-dropdown-toggle="dropdownDots{{ $lesson->id }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                    <button id="dropdownMenuIconButton{{ $lesson->id }}" data-dropdown-toggle="dropdownDots{{ $lesson->id }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none " type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
                                         <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
                                         </svg>
                                     </button>
                                     <!-- Dropdown menu -->
-                                    <div id="dropdownDots{{ $lesson->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton{{ $lesson->id }}">
+                                    <div id="dropdownDots{{ $lesson->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
+                                        <ul class="py-2 text-sm text-gray-700 " aria-labelledby="dropdownMenuIconButton{{ $lesson->id }}">
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubText"  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 "  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
                                             </li>
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="link" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Link</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addSubLink" addType="link" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Link</button>
                                             </li>
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="video" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Video</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addSubLink" addType="video" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Video</button>
                                             </li>
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubLink" addType="embed" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Embed<></button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addSubLink" addType="embed" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Embed<></button>
                                             </li>
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
                                             </li>
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addQuiz" addType="quiz" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Quiz</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addQuiz" addType="quiz" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Quiz</button>
                                             </li>
                                         </ul>
                                         <div class="py-2">
-                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> Edit</button>
-                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> Delete</button>
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> Edit</button>
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="flex justify-center text-red-500"><p>Please <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">Enroll</span>in top right to get all lesson</p></div>
+                    <div class="flex justify-center text-red-500"><p>Please <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded   border border-yellow-300">Enroll</span>in top right to get all lesson</p></div>
                 @endif
 
 
@@ -545,7 +545,7 @@
             Swal.fire({
                 title: `Add ${addType}`,
                 html:`<input id="swal-input1" class="swal2-input" placeholder="Enter label">
-                <select id="selQuiz" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select id="selQuiz" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                         <option selected disabled>Please select quiz</option>
                     @foreach ($quizzes as $quiz)
                         <option value="{{$quiz->id}}">{{$quiz->title}}</option>
@@ -613,13 +613,13 @@
                 title: 'Add File',
                 html:`  <input id="labelInput" class="swal2-input" placeholder="Enter label">
                         <div class="flex items-center justify-center w-full">
-                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100 ">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
-                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4,zip,rar <br> (MAX 10Mb size)</p>
+                                    <p class="mb-2 text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500 ">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4,zip,rar <br> (MAX 10Mb size)</p>
                                 </div>
                                 <input id="dropzone-file" type="file" class="hidden" />
                             </label>
@@ -740,8 +740,8 @@
                 <hr>
                 <p class="my-2">History</p>
                 <div class="relative h-40 overflow-x-auto overflow-y-auto">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
                             <tr>
                                 <th scope="col" class="px-6 py-2">
                                     #
@@ -762,11 +762,11 @@
                         </thead>
                         <tbody>
                             @foreach ($tested as $index => $test)
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr class="bg-white border-b  ">
                                     <td class="px-3 py-2">
                                         {{$index +1}}
                                     </td>
-                                    <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap ">
                                         {{$test->getQuiz->title}}
                                     </th>
                                     <td class="px-3 py-2">

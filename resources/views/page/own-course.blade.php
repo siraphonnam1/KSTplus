@@ -36,7 +36,7 @@
                             </div>
                         @endforeach
                     @else
-                        <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Course not found</span></div>
+                        <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded ">Course not found</span></div>
                     @endif
                 </div>
             </div>
@@ -67,11 +67,11 @@
                     <label class="form-check-label" for="dpmPer">DpmOnly</label>
                 </div>
                 <div class="flex items-center justify-center w-full mt-2">
-                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
                         <div class="flex flex-col items-center justify-center pt-2 pb-2">
                             <p class="mb-2 font-bold">Course image</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">jpeg,png  (MAX 10Mb size)</p>
+                            <p class="text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500 ">jpeg,png  (MAX 10Mb size)</p>
                         </div>
                         <input id="dropzone-file" type="file" class="hidden" />
                     </label>
@@ -204,11 +204,11 @@
                         <label class="form-check-label" for="dpmPer">DpmOnly</label>
                     </div>
                     <div class="flex items-center justify-center w-full mt-2">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
                             <div class="flex flex-col items-center justify-center pt-2 pb-2">
                                 <p class="mb-2 font-bold">Course image</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">jpeg,png  (MAX 10Mb size)</p>
+                                <p class="text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500 ">jpeg,png  (MAX 10Mb size)</p>
                             </div>
                             <input id="dropzone-file" type="file" class="hidden" />
                         </label>

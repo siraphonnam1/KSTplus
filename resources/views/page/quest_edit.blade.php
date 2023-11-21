@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card px-5 py-4">
                     <p class="fw-bold text-2xl mb-4">Edit Question</p>
-                    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="mb-4 border-b border-gray-200 ">
                         <div class="grid grid-cols-8 mb-3">
                             <p class="self-center text-lg">Question Title: </p>
                             <input
@@ -19,7 +19,7 @@
                                 name="title"
                                 maxlength="1000"
                                 value="{{$quest->title}}"
-                                class="col-span-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Question title" required>
+                                class="col-span-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Question title" required>
                         </div>
                         <div class="grid grid-cols-8 mb-3">
                             <p class="self-center text-lg">Question Score: </p>
@@ -29,7 +29,7 @@
                                     max="100"
                                     name="score"
                                     value="{{$quest->score}}"
-                                    class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                             <p class="self-center text-xs ms-2 text-gray-400">Number 1 - 100</p>
                         </div>
                         <div class="grid grid-cols-8 mb-3">
@@ -40,20 +40,20 @@
                                         type="checkbox"
                                         value="1"
                                         {{ $quest->shuffle_ch ? 'checked' : ''}}
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="shuffle" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Shuffle choices</label>
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                <label for="shuffle" class="ms-2 text-sm font-medium text-gray-900 ">Shuffle choices</label>
                             </div>
                         </div>
                         <div class="grid grid-cols-8 mb-3">
                             <p class="self-center text-lg">Answer type:</p>
                             <div class="flex gap-4">
                                 <div class="flex items-center">
-                                    <input {{ $quest->type ? 'checked' : ''}} id="default-radio-1" type="radio" value="1" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Choice</label>
+                                    <input {{ $quest->type ? 'checked' : ''}} id="default-radio-1" type="radio" value="1" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
+                                    <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 ">Choice</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input {{ $quest->type ? '' : 'checked'}} id="default-radio-2" type="radio" value="0" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Text</label>
+                                    <input {{ $quest->type ? '' : 'checked'}} id="default-radio-2" type="radio" value="0" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
+                                    <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 ">Text</label>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                                     </button>
                                 </li>
                                 <li class="me-2" role="presentation">
-                                    <button class="flex inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="{{$quest->type ? 'false' : 'true'}}">
+                                    <button class="flex inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 " id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="{{$quest->type ? 'false' : 'true'}}">
                                         <svg class="w-4 h-4 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279"/>
                                         </svg>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div id="default-tab-content">
-                        <div class="flex hidden p-2 ps-5 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="flex hidden p-2 ps-5 rounded-lg bg-gray-50 " id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="grow">
                                 <ol class="list-decimal" id="choiceList">
                                     @if ($quest->type)
@@ -94,14 +94,14 @@
                                                                 maxlength="1000"
                                                                 name="choice{{$index+1}}"
                                                                 value="{{$answer['text']}}"
-                                                                class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text" />
+                                                                class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text" />
                                                         <div class="flex items-center">
                                                             <input id="default-checkbox{{$index+1}}"
                                                                     name="answer{{$index+1}}"
                                                                     type="checkbox"
                                                                     {{$answer['answer'] ? 'checked' : ''}}
-                                                                    value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                            <label for="default-checkbox{{$index+1}}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer</label>
+                                                                    value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                                            <label for="default-checkbox{{$index+1}}" class="ms-2 text-sm font-medium text-gray-900 ">Answer</label>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -112,10 +112,10 @@
                                 </ol>
                             </div>
                             <div class="p-4 flex justify-center">
-                                <button type="button" id="addAns" style="background-color: rgb(0, 153, 0)" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><i class="bi bi-plus-lg"></i> Add</button>
+                                <button type="button" id="addAns" style="background-color: rgb(0, 153, 0)" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 "><i class="bi bi-plus-lg"></i> Add</button>
                             </div>
                         </div>
-                        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                        <div class="hidden p-4 rounded-lg bg-gray-50 " id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                                 <input
                                     type="text"
                                     id="choice2"
@@ -123,14 +123,14 @@
                                     @if (!$quest->type)
                                         value="{{$quest->answer[0]['answer']}}"
                                     @endif
-                                    class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input answer" />
+                                    class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input answer" />
                         </div>
                     </div>
                     <div class="mt-20">
-                        <button type="submit" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                        <button type="submit" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
                             Save
                         </button>
-                        <button type="button" style="background-color: rgb(255, 112, 112)" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                        <button type="button" style="background-color: rgb(255, 112, 112)" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
                             Cancel
                         </button>
                     </div>
@@ -149,10 +149,10 @@
             $('#choiceList').append(`
                 <li class="mb-2">
                     <div class="flex gap-4">
-                        <input type="text" id="choice${count}" name="choice${count}" maxlength="1000" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text"/>
+                        <input type="text" id="choice${count}" name="choice${count}" maxlength="1000" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text"/>
                         <div class="flex items-center">
-                            <input id="default-checkbox${count}" name="answer${count}" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="default-checkbox${count}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer</label>
+                            <input id="default-checkbox${count}" name="answer${count}" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                            <label for="default-checkbox${count}" class="ms-2 text-sm font-medium text-gray-900 ">Answer</label>
                         </div>
                     </div>
                 </li>

@@ -5,7 +5,7 @@
                 <p class="fs-2 fw-bold">Quizzes</p>
 
                 <!-- Add quiz Modal -->
-                <button data-modal-target="static-modal" style="background-color: rgb(0, 153, 0)" data-modal-toggle="static-modal" class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                <button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center " type="button">
                     <i class="bi bi-journal-plus"></i>
                 </button>
 
@@ -13,13 +13,13 @@
                 <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <div class="relative p-4 w-full max-w-2xl max-h-full">
                         <!-- Modal content -->
-                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div class="relative bg-white rounded-lg shadow ">
                             <!-- Modal header -->
-                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                <h3 class="text-xl font-semibold text-gray-900 ">
                                     Add quiz
                                 </h3>
-                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal">
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="static-modal">
                                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                     </svg>
@@ -32,19 +32,19 @@
                                 <div class="p-4 md:p-5 space-y-4">
                                     <div class="grid grid-cols-4 mb-4">
                                         <div class="col-span-1 self-center"><p>Quiz Name :</p></div>
-                                        <div class="col-span-3"><input type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Input quiz name" required></div>
+                                        <div class="col-span-3"><input type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Input quiz name" required></div>
                                     </div>
                                     <div class="grid grid-cols-4 mb-4">
                                         <div class="col-span-1 self-center"><p>Time limit :</p></div>
                                         <div class="col-span-3 flex">
-                                            <input type="number" id="first_name" name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{0}}">
+                                            <input type="number" id="first_name" name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="{{0}}">
                                             <p class="self-center ms-1">minute.</p>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-4 mb-4">
                                         <div class="col-span-1 self-center"><p>Pass score :</p></div>
                                         <div class="col-span-3 flex">
-                                            <input type="number" id="first_name" name="passScore" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{50}}">
+                                            <input type="number" id="first_name" name="passScore" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="{{50}}">
                                             <p class="self-center ms-1">%</p>
                                         </div>
                                     </div>
@@ -52,8 +52,8 @@
                                         <div class="col-span-1 self-center"></div>
                                         <div class="col-span-3 flex">
                                             <div class="flex items-center mb-2">
-                                                <input id="default-checkbox" type="checkbox" name="shuffq" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Shuffle question.</label>
+                                                <input id="default-checkbox" type="checkbox" name="shuffq" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">Shuffle question.</label>
                                             </div>
                                         </div>
                                     </div>
@@ -61,8 +61,8 @@
                                         <div class="col-span-1 self-center"></div>
                                         <div class="col-span-3 flex">
                                             <div class="flex items-center mb-4">
-                                                <input id="default-checkbox" type="checkbox" name="showAns" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Show Answer.</label>
+                                                <input id="default-checkbox" type="checkbox" name="showAns" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">Show Answer.</label>
                                             </div>
                                         </div>
                                     </div>
@@ -77,9 +77,9 @@
                                     @endif
                                 </div>
                                 <!-- Modal footer -->
-                                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
-                                    <button data-modal-hide="static-modal" type="button" class="ms-3 text-gray-500 hover:text-white hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-red-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Save</button>
+                                    <button data-modal-hide="static-modal" type="button" class="ms-3 text-gray-500 hover:text-white hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-red-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">Decline</button>
                                 </div>
                             </form>
                         </div>
@@ -90,8 +90,8 @@
 
             <div>
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-white uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead class="text-xs text-white uppercase bg-gray-700 ">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     #
@@ -115,11 +115,11 @@
                         </thead>
                         <tbody>
                             @foreach ($quizs as $index => $quiz)
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <tr class="bg-white border-b  hover:bg-gray-50 ">
                                     <th class="px-6 py-4">
                                         {{ $index+1 }}
                                     </th>
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                                         {{ $quiz->title }}
                                     </th>
                                     <td class="px-6 py-4">
@@ -132,25 +132,19 @@
                                         {{ $quiz->shuffle_quest ? "Yes" : "No" }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{-- <a href="" class="text-lg text-blue-400 dark:text-blue-700 hover:text-blue-700 hover:underline"><i class="bi bi-pencil-square"></i></a> --}}
-
-                                        <!-- Add quiz Modal -->
-                                        {{-- <button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-                                            <i class="bi bi-journal-plus"></i>
-                                        </button> --}}
-                                        <a href="#" data-modal-target="static-modal{{$quiz->id}}" data-modal-toggle="static-modal{{$quiz->id}}" class="text-lg text-blue-400 dark:text-blue-700 hover:text-blue-700 hover:underline"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="#" data-modal-target="static-modal{{$quiz->id}}" data-modal-toggle="static-modal{{$quiz->id}}" class="text-lg text-blue-400  hover:text-blue-700 hover:underline"><i class="bi bi-pencil-square"></i></a>
 
                                         <!-- Main modal -->
                                         <div id="static-modal{{$quiz->id}}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                             <div class="relative p-4 w-full max-w-2xl max-h-full">
                                                 <!-- Modal content -->
-                                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                <div class="relative bg-white rounded-lg shadow ">
                                                     <!-- Modal header -->
-                                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                                        <h3 class="text-xl font-semibold text-gray-900 ">
                                                             Edit quiz
                                                         </h3>
-                                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal{{$quiz->id}}">
+                                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="static-modal{{$quiz->id}}">
                                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                                             </svg>
@@ -163,19 +157,19 @@
                                                         <div class="p-4 md:p-5 space-y-4">
                                                             <div class="grid grid-cols-4 mb-4">
                                                                 <div class="col-span-1 self-center"><p>Quiz Name :</p></div>
-                                                                <div class="col-span-3"><input value="{{$quiz->title}}" type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Input quiz name" required></div>
+                                                                <div class="col-span-3"><input value="{{$quiz->title}}" type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Input quiz name" required></div>
                                                             </div>
                                                             <div class="grid grid-cols-4 mb-4">
                                                                 <div class="col-span-1 self-center"><p>Time limit :</p></div>
                                                                 <div class="col-span-3 flex">
-                                                                    <input type="number" id="first_name"  name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$quiz->time_limit}}">
+                                                                    <input type="number" id="first_name"  name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="{{$quiz->time_limit}}">
                                                                     <p class="self-center ms-1">minute.</p>
                                                                 </div>
                                                             </div>
                                                             <div class="grid grid-cols-4 mb-4">
                                                                 <div class="col-span-1 self-center"><p>Pass score :</p></div>
                                                                 <div class="col-span-3 flex">
-                                                                    <input type="number" id="first_name" name="passScore" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$quiz->pass_score}}">
+                                                                    <input type="number" id="first_name" name="passScore" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="{{$quiz->pass_score}}">
                                                                     <p class="self-center ms-1">%</p>
                                                                 </div>
                                                             </div>
@@ -183,8 +177,8 @@
                                                                 <div class="col-span-1 self-center"></div>
                                                                 <div class="col-span-3 flex">
                                                                     <div class="flex items-center mb-4">
-                                                                        <input id="default-checkbox" type="checkbox" {{$quiz->shuffle_quest ? 'checked' : ''}} name="shuffq" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Shuffle question.</label>
+                                                                        <input id="default-checkbox" type="checkbox" {{$quiz->shuffle_quest ? 'checked' : ''}} name="shuffq" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                                                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">Shuffle question.</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -192,8 +186,8 @@
                                                                 <div class="col-span-1 self-center"></div>
                                                                 <div class="col-span-3 flex">
                                                                     <div class="flex items-center mb-4">
-                                                                        <input id="default-checkbox" type="checkbox" name="showAns" {{$quiz->showAns ? 'checked' : ''}} value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Show Answer.</label>
+                                                                        <input id="default-checkbox" type="checkbox" name="showAns" {{$quiz->showAns ? 'checked' : ''}} value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                                                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">Show Answer.</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -208,17 +202,17 @@
                                                             @endif
                                                         </div>
                                                         <!-- Modal footer -->
-                                                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
-                                                            <button data-modal-hide="static-modal{{$quiz->id}}" type="button" class="ms-3 text-gray-500 hover:text-white hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-red-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                                                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Save</button>
+                                                            <button data-modal-hide="static-modal{{$quiz->id}}" type="button" class="ms-3 text-gray-500 hover:text-white hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-red-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">Decline</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <a href="#" data-quiz-id="{{$quiz->id}}" class="delQuizBtn text-lg text-red-500 dark:text-red-400 hover:text-red-700 hover:underline"><i class="bi bi-trash3"></i></a>
-                                        <a href="{{route('quiz.detail', ['id' => $quiz->id])}}" class="text-lg text-purple-500 dark:text-purple-400 hover:text-purple-700 hover:underline"><i class="bi bi-box-arrow-in-right"></i></a>
+                                        <a href="#" data-quiz-id="{{$quiz->id}}" class="delQuizBtn text-lg text-red-500  hover:text-red-700 hover:underline"><i class="bi bi-trash3"></i></a>
+                                        <a href="{{route('quiz.detail', ['id' => $quiz->id])}}" class="text-lg text-purple-500  hover:text-purple-700 hover:underline"><i class="bi bi-box-arrow-in-right"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

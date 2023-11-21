@@ -21,7 +21,7 @@
                             <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
                             <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
                                 {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                             </div>
                             <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
                                 <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
@@ -50,7 +50,7 @@
                             <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>View course</p></a>
                             <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
                                 {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded  ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                             </div>
                             <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
                                 <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>

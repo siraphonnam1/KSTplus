@@ -182,10 +182,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 col">
+                <div class="max-w-sm w-full bg-white rounded-lg shadow  p-4 md:p-6 col">
                     <div class="flex justify-between items-start w-full">
                         <div class="flex-col items-center">
-                            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mr-1"><i class="bi bi-briefcase"></i> All Course</h5>
+                            <h5 class="text-xl font-bold leading-none text-gray-900  mr-1"><i class="bi bi-briefcase"></i> All Course</h5>
                         </div>
                     </div>
                     <!-- Line Chart -->
