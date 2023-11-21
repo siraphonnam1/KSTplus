@@ -24,6 +24,14 @@ class TestController extends Controller
         $answers = session('answers', []);
         //  clear session -> session()->forget('scores');
         $quiz = quiz::find($quizId);
+
+        session()->forget('scores');
+        session()->forget('quests');
+        session()->forget('totalScore');
+        session()->forget('timeUsege');
+        session()->forget('quizId');
+        session()->forget('courseId');
+        session()->forget('answers');
         return view("page.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
     }
 
@@ -70,7 +78,7 @@ class TestController extends Controller
             'answers' => $answers,
         ]);
 
-
+        session()->forget('testResults');
         return redirect()->route('test.summary');
         // return view("page.test_summary", compact("scores", "quests", "totalScore", "timeUsege"));
     }

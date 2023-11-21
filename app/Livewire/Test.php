@@ -88,6 +88,15 @@ class Test extends Component
             } else {
                 $ques = question::find($key);
                 $qAns = $ques->answer[0]['answer'];
+
+                // Remove all spaces
+                $qAns = str_replace(' ', '', $qAns);
+                $ans = str_replace(' ', '', $ans);
+
+                // Convert to lowercase
+                $qAns = strtolower($qAns);
+                $ans = strtolower($ans);
+
                 $this->submitAns[$key] = [
                     "ans"=> $ans,
                     "status"=> ($ans == $qAns ? 1 : 0 ),
