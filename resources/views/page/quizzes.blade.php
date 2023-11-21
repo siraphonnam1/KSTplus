@@ -5,7 +5,7 @@
                 <p class="fs-2 fw-bold">Quizzes</p>
 
                 <!-- Add quiz Modal -->
-                <button data-modal-target="static-modal" data-modal-toggle="static-modal" class="flex text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                <button data-modal-target="static-modal" style="background-color: rgb(0, 187, 0)" data-modal-toggle="static-modal" class="flex text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
                     <i class="bi bi-journal-plus"></i>
                 </button>
 
