@@ -46,13 +46,17 @@
                         </x-slot>
                     </x-dropdown>
                     @hasanyrole('admin|teacher|staff')
-                        <a href="{{route('users.all')}}" >
-                            {{ __('Users') }}
+                        <a href="{{route('quiz')}}" >
+                            {{ __('Quiz') }}
                         </a>
-
                         <a href="{{route('request.all')}}" >
                             {{ __('Request') }}
                         </a>
+                        @hasanyrole('admin|staff')
+                        <a href="{{route('users.all')}}" >
+                            {{ __('Users') }}
+                        </a>
+                        @endhasanyrole
                         @hasrole('admin')
                             <a href="{{route('manage')}}" >
                                 {{ __('Manage') }}
@@ -62,7 +66,7 @@
                 </div>
             </div>
 
-            @unlessrole('employee')
+            @unlessrole('employee|teacher')
                 <button id="dropdownNotificationButton" data-dropdown-toggle="dropdownNotification" class="inline-flex items-center text-sm font-medium text-center text-gray-500 hover:text-gray-900 focus:outline-none dark:hover:text-white dark:text-gray-400" type="button">
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 14 20">
                         <path d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z"/>
@@ -171,12 +175,15 @@
                 <x-responsive-nav-link :href="route('course.all')" :active="request()->routeIs('home')">
                     {{ __('Own Course') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('quiz')" :active="request()->routeIs('home')">
+                    {{ __('Quiz') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('request.all')" :active="request()->routeIs('home')">
+                    {{ __('Request') }}
+                </x-responsive-nav-link>
                 @hasanyrole('admin|staff')
                     <x-responsive-nav-link :href="route('users.all')" :active="request()->routeIs('home')">
                         {{ __('Users') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('request.all')" :active="request()->routeIs('home')">
-                        {{ __('Request') }}
                     </x-responsive-nav-link>
                     @hasrole('admin')
                         <x-responsive-nav-link :href="route('manage')" :active="request()->routeIs('home')">

@@ -12,7 +12,9 @@ use App\Models\progress;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\course;
+use App\Models\quiz;
 use App\Notifications\MessageNotification;
+use App\Models\Test;
 
 
 class HomeController extends Controller
@@ -31,7 +33,13 @@ class HomeController extends Controller
     public function courseDetail(Request $request, $id) {
         $lessons = lesson::where("course", $id)->get();
         $course = course::find($id);
-        return view("page.course-detail", compact("id", "lessons", "course"));
+        if ($request->user()->hasAnyRole(['admin','staff'])) {
+            $quizzes = quiz::all();
+        } else {
+            $quizzes = quiz::where('create_by', $request->user()->id)->get();
+        }
+        $tested = Test::where('tester', $request->user()->id)->orderBy('id', 'desc')->get();
+        return view("page.course-detail", compact("id", "lessons", "course", "quizzes", 'tested'));
     }
 
     public function allCourse(Request $request) {

@@ -5,7 +5,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="sm:rounded-lg p-4 row">
-                <div class="col-lg-8 col-md-8 col-sm-12 overflow-y-auto mb-4" style="height: 520px">
+                <div class="mb-4 flex justify-end">
+                    <button class="btn btn-success" onclick="showAddCourseAlert()">
+                        <i class="bi bi-plus-circle-fill"></i> Add Course
+                    </button>
+                </div>
+                <div class="overflow-y-auto mb-4" style="height: 520px">
                     @if (count($courses) > 0)
                         @foreach ($courses as $course)
                             {{-- course card --}}
@@ -33,13 +38,6 @@
                     @else
                         <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Course not found</span></div>
                     @endif
-                </div>
-                <div class="col-md-4 col-lg-4 px-4 col-sm-12">
-                    <div class="mb-4">
-                        <button class="btn btn-success w-100" onclick="showAddCourseAlert()">
-                            <i class="bi bi-plus-circle-fill"></i> Add Course
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

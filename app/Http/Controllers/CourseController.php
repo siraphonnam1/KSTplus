@@ -311,14 +311,13 @@ class CourseController extends Controller
 
     public function addLesson(Request $request): RedirectResponse {
         $request->validate([
-            'desc' => ['string', 'max:20000'],
             'topic' => ['required', 'string', 'max:5000'],
             'courseid' => ['required', 'string', 'max:255'],
         ]);
         try {
             $lesson = lesson::create([
                 'topic'=> $request->topic,
-                'desc'=> $request->desc,
+                'desc'=> $request->desc ?? '',
                 'course'=> $request->courseid,
             ]);
             alert()->success('Success','Lesson has been saved!');

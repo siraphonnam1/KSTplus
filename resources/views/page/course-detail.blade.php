@@ -86,6 +86,33 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                        @elseif ($sls->type == 'quiz')
+                                            @php
+                                                $quiz = App\Models\quiz::find($sls->content);
+                                                $quesnum = App\Models\question::where('quiz', $sls->content)->count();
+                                            @endphp
+                                            <div class="mb-3 flex justify-between">
+                                                <div>
+                                                    <i class="bi bi-list-check bg-secondary rounded-circle p-1 text-light"></i>
+                                                    <a
+                                                        class="text-primary preQuiz cursor-pointer chapter"
+                                                        qTitle="{{ $quiz->title }}"
+                                                        cid="{{$course->id}}"
+                                                        qid="{{$sls->content}}"
+                                                        pass="{{$quiz->pass_score}}"
+                                                        qBy="{{$quiz->getCreated->name}}"
+                                                        quesNum = "{{$quesnum}}"
+                                                    >
+                                                        {{ $sls->label }}
+                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                        <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         @else
                                             <div class="mb-3 flex justify-between">
                                                 <div>
@@ -136,6 +163,9 @@
                                             </li>
                                             <li>
                                                 <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addSubFile" addType="file" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> File</button>
+                                            </li>
+                                            <li>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white addQuiz" addType="quiz" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Quiz</button>
                                             </li>
                                         </ul>
                                         <div class="py-2">
@@ -206,7 +236,7 @@
                                                     <label for="topic">Topic</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" name="desc" id="desc">
+                                                    <input type="text" class="form-control" name="desc" id="desc" maxlength="10000">
                                                     <label for="desc">Description</label>
                                                 </div>
                                                 {{-- <div>
@@ -504,6 +534,75 @@
         });
     });
 
+    // <li>
+    //     <button class="addQuiz" addType="quiz" lessId="{{ $lesson->id }}">
+    // </li>
+    const addQuiz = document.querySelectorAll(".addQuiz");
+    addQuiz.forEach((btn) => {
+        const lessid = btn.getAttribute('lessId')
+        const addType = btn.getAttribute('addType')
+        btn.addEventListener('click', function () {
+            Swal.fire({
+                title: `Add ${addType}`,
+                html:`<input id="swal-input1" class="swal2-input" placeholder="Enter label">
+                <select id="selQuiz" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected disabled>Please select quiz</option>
+                    @foreach ($quizzes as $quiz)
+                        <option value="{{$quiz->id}}">{{$quiz->title}}</option>
+                    @endforeach
+                </select>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Save',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    const label = document.getElementById('swal-input1').value;
+                    const content = document.getElementById('selQuiz').value;
+
+                    if (!label) {
+                        Swal.showValidationMessage("Label is required!");
+                        return;
+                    } else if (!content) {
+                        Swal.showValidationMessage("Content is required!");
+                        return;
+                    } else {
+                        return fetch('/lesson/sublesson/add', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ label: label, content: content, lessId: lessid, addType: addType})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed`
+                            )
+                        })
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(result.value);
+                    Swal.fire(
+                        'Success!',
+                        'Your sublesson has been saved.',
+                        'success'
+                    )
+                }
+            })
+        });
+    });
+
 
     const addFile = document.querySelectorAll(".addSubFile");
     addFile.forEach((btnf) => {
@@ -619,6 +718,83 @@
                         }
                     }
             })
+        });
+    });
+
+    const preQuiz  = document.querySelectorAll('.preQuiz ');
+    preQuiz .forEach((qzbtn) => {
+        const cid = qzbtn.getAttribute('cid');
+        const qid = qzbtn.getAttribute('qid');
+        const qTitle = qzbtn.getAttribute('qTitle');
+        const qpass = qzbtn.getAttribute('pass');
+        const qBy = qzbtn.getAttribute('qBy');
+        const quesNum = qzbtn.getAttribute('quesNum');
+        console.log('quiz', qTitle, qid);
+        qzbtn.addEventListener('click', function () {
+            const pdfUrl = this.getAttribute('data-file-path');
+            Swal.fire({
+                title: `Quiz::${qTitle}`,
+                html: `<p>By: ${qBy}</p>
+                <p>Pass Score: ${qpass}%</p>
+                <p class="mb-2">Qurstions: ${quesNum}</p>
+                <hr>
+                <p class="my-2">History</p>
+                <div class="relative h-40 overflow-x-auto overflow-y-auto">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-2">
+                                    #
+                                </th>
+                                <th scope="col" class="px-6 py-2">
+                                    Quiz
+                                </th>
+                                <th scope="col" class="px-6 py-2">
+                                    Score
+                                </th>
+                                <th scope="col" class="px-6 py-2">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-2">
+                                    Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($tested as $index => $test)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-3 py-2">
+                                        {{$index +1}}
+                                    </td>
+                                    <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{$test->getQuiz->title}}
+                                    </th>
+                                    <td class="px-3 py-2">
+                                        {{$test->score}}/{{$test->totalScore}}
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
+                                            <p class="text-green-500">PASS</p>
+                                        @else
+                                            <p class="text-red-500">FAIL</p>
+                                        @endif
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        {{$test->created_at->format('d-m-Y')}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                    `,
+                showCancelButton: true,
+                confirmButtonText: 'Start',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/test/start/${cid}/${qid}`; // Replace 'startQuiz' with your route name
+                }
+            });
         });
     });
 </script>

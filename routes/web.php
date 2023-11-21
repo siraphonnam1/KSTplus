@@ -5,6 +5,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ManageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,6 +86,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/lesson/sublesson/delete', [CourseController::class,'subLessDel']);
     Route::get('/courses/search/dpm', [CourseController::class, 'searchDpm'])->name('courses.search.dpm');
     Route::get('/courses/search/all', [CourseController::class, 'searchAll'])->name('courses.search.all');
+
+    // quiz
+    Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
+    Route::post('/quiz/add', [QuizController::class,'store'])->name('quiz.store');
+    Route::post('/quiz/update/{id}', [QuizController::class,'update'])->name('quiz.update');
+    Route::get('/quiz/detail/{id}', [QuizController::class,'quizDetail'])->name('quiz.detail');
+    Route::get('/quiz/question/add/{id}', [QuizController::class, 'addQuestion'])->name('quiz.quest.add');
+    Route::get('/quiz{qid}/question{id}/edit', [QuizController::class, 'editQuestion'])->name('quiz.quest.edit');
+    Route::post('/quiz/question/store/{id}', [QuizController::class, 'storeQuestion'])->name('quiz.quest.store');
+    Route::post('/quiz/question/update/{id}', [QuizController::class, 'updateQuestion'])->name('quiz.quest.update');
+    Route::get('/quiz/question/delete/{id}', [QuizController::class, 'delQuestion'])->name('quiz.quest.del');
+    Route::get('/quiz/delete/{id}', [QuizController::class, 'destroy'])->name('quiz.del');
+
+    // Take Exam
+    Route::get('/test/start/{cid}/{qzid}', [TestController::class, 'index'])->name('test.start');
+    Route::get('/test/summary', [TestController::class, 'testSummary'])->name('test.summary');
+    Route::get('/test/finish', [TestController::class, 'finishTest'])->name('test.finish');
 
 
 });

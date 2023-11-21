@@ -4,14 +4,102 @@
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mb-2 flex justify-end mx-2">
+                <button
+                    class="btn btn-success"
+                    id="addBtn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addUserModal"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Add user"><i class="bi bi-person-plus-fill"></i></button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header ">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add User</h1>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ route('user.register') }}" method="post">
+                                    @csrf
+                                    <div class="d-flex gap-2 mb-2">
+                                        <p>Name</p>
+                                        <input type="text" class="form-control form-control-sm" value="{{ old('name') }}" name="name" required>
+                                    </div>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <p>Username</p>
+                                        <input type="text" class="form-control form-control-sm" value="{{ old('username') }}" name="username" required>
+                                    </div>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <p>Password</p>
+                                        <input type="password" class="form-control form-control-sm" name="password" required>
+                                    </div>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('agn') }}" name="agn" required>
+                                            <option selected disabled>Agency</option>
+                                            @foreach ($agns as $agn)
+                                                <option value="{{ $agn->id }}">{{ $agn->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('brn') }}" name="brn" required>
+                                            <option selected disabled>Branch</option>
+                                            @foreach ($brns as $brn)
+                                                <option value="{{ $brn->id }}">{{ $brn->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('dpm') }}" name="dpm" required>
+                                            <option selected disabled>Department</option>
+                                            @foreach ($dpms as $dpm)
+                                                <option value="{{ $dpm->id }}">{{ $dpm->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('role') }}" name="role" required>
+                                            <option selected disabled>Role</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="my-4">
+                                        <p>Course</p>
+                                        <select class="form-select" id="small-select2-options-multiple-field" aria-label="Small select example" multiple name="courses[]">
+                                            @foreach ($courses as $course)
+                                                <option value="{{ $course->id }}">{{ $course->code }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-outline-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="sm:rounded-lg p-4 row">
-                <div class="col-lg-9 bg-light col-md-9 col-sm-12 p-4 rounded ">
+                <div class="bg-light p-4 rounded ">
                     <table class="table table-sm table-hover" id="users-datatable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Status</th>
+                                <th scope="col">Role</th>
                                 <th scope="col">Dpm</th>
                                 <th scope="col">Course</th>
                                 <th scope="col">OwnCourse</th>
@@ -75,96 +163,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-3 col-lg-3 px-3 col-sm-12">
-
-                    <div class="mb-2">
-                        <button
-                            class="btn btn-success w-100"
-                            id="addBtn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#addUserModal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            data-bs-title="Add user"><i class="bi bi-person-plus-fill"></i></button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header ">
-                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add User</h1>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ route('user.register') }}" method="post">
-                                            @csrf
-                                            <div class="d-flex gap-2 mb-2">
-                                                <p>Name</p>
-                                                <input type="text" class="form-control form-control-sm" value="{{ old('name') }}" name="name" required>
-                                            </div>
-                                            <div class="d-flex gap-2 mb-2">
-                                                <p>Username</p>
-                                                <input type="text" class="form-control form-control-sm" value="{{ old('username') }}" name="username" required>
-                                            </div>
-                                            <div class="d-flex gap-2 mb-2">
-                                                <p>Password</p>
-                                                <input type="password" class="form-control form-control-sm" name="password" required>
-                                            </div>
-                                            <div class="d-flex gap-2 mb-2">
-                                                <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('agn') }}" name="agn" required>
-                                                    <option selected disabled>Agency</option>
-                                                    @foreach ($agns as $agn)
-                                                        <option value="{{ $agn->id }}">{{ $agn->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('brn') }}" name="brn" required>
-                                                    <option selected disabled>Branch</option>
-                                                    @foreach ($brns as $brn)
-                                                        <option value="{{ $brn->id }}">{{ $brn->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="d-flex gap-2 mb-2">
-                                                <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('dpm') }}" name="dpm" required>
-                                                    <option selected disabled>Department</option>
-                                                    @foreach ($dpms as $dpm)
-                                                        <option value="{{ $dpm->id }}">{{ $dpm->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('role') }}" name="role" required>
-                                                    <option selected disabled>Role</option>
-                                                    @foreach ($roles as $role)
-                                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="my-4">
-                                                <p>Course</p>
-                                                <select class="form-select" id="small-select2-options-multiple-field" aria-label="Small select example" multiple name="courses[]">
-                                                    @foreach ($courses as $course)
-                                                        <option value="{{ $course->id }}">{{ $course->code }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @if ($errors->any())
-                                                <div class="alert alert-danger">
-                                                    <ul>
-                                                        @foreach ($errors->all() as $error)
-                                                            <li>{{ $error }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            @endif
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-outline-primary">Save</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -255,7 +253,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
+                confirmButtonText: 'Save',
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     const uId = btn.value;

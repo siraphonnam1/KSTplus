@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Test;
+use Illuminate\Http\Request;
+use App\Models\question;
+use Carbon\Carbon;
+use App\Models\quiz;
+
+class TestController extends Controller
+{
+    public function index($cid , $qzid) {
+        return view("page.test", compact('qzid', 'cid'));
+    }
+
+    public function testSummary() {
+        $scores = session('scores', 0);
+        $quests = session('quests', []);
+        $totalScore = session('totalScore', 0);
+        $timeUsege = session('timeUsege', []);
+        $quizId = session('quizId', 0);
+        $cid = session('courseId', 0);
+        $answers = session('answers', []);
+        //  clear session -> session()->forget('scores');
+        $quiz = quiz::find($quizId);
+        return view("page.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
+    }
+
+    public function finishTest(Request $request) {
+        $testResults = session('testResults');
+        // session()->flash('testResults', [
+        //     'quiz'=> $this->testId,
+        //     'questions'=> $this->questions,
+        //     'start' => $this->startTest,
+        //     'end' => $this->endTest,
+        //     'submitAns' => $this->submitAns,
+        // ]);
+        $quests = $testResults['questions'] ?? [];
+        $answers = $testResults['submitAns'] ?? [];
+        $quizId = $testResults['quiz'];
+        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $testResults['start']);
+        $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $testResults['end']);
+        $timeUsege = $startDate->diff($endDate);  // $diff->format('%d days, %h hours, %i minutes');
+        $scores = 0;
+        $totalScore = 0;
+        foreach ($quests as $quest) {
+            if ($answers[$quest->id]['status']) {
+                $scores += $quest->score;
+            }
+            $totalScore += $quest->score;
+        }
+        $test = Test::create([
+            'quiz'=> $testResults['quiz'],
+            'tester'=> $request->user()->id,
+            'start'=> $testResults['start'],
+            'answers'=> json_encode($answers),
+            'score' => $scores,
+            'totalScore' => $totalScore,
+            'end'=> $testResults['end'],
+        ]);
+
+        session([
+            'scores' => $scores,
+            'quests' => $quests,
+            'totalScore' => $totalScore,
+            'timeUsege' => $timeUsege,
+            'quizId' => $quizId,
+            'courseId' => $testResults['courseId'],
+            'answers' => $answers,
+        ]);
+
+
+        return redirect()->route('test.summary');
+        // return view("page.test_summary", compact("scores", "quests", "totalScore", "timeUsege"));
+    }
+}
