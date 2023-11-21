@@ -15,7 +15,8 @@ class QuizController extends Controller
     }
 
     public function addQuestion($id) {
-        return view("page.add_question", compact("id"));
+        $quiz = quiz::find($id);
+        return view("page.add_question", compact("id", "quiz"));
     }
 
     public function editQuestion($qid, $id) {
