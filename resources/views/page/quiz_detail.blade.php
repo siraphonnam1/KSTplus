@@ -55,7 +55,7 @@
                             </button>
                         </h2>
                         <div id="accordion-open-body{{$index}}" class="hidden" aria-labelledby="accordion-open-heading{{$index}}">
-                            <div class="overflow-x-scroll px-2 md:px-8 py-4 border border-t-0 border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50">
+                            <div class="overflow-x-scroll px-3.5 md:px-8 py-4 border border-t-0 border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50">
                                 <div class="flex gap-4 mb-2 flex-wrap">
                                     <p ><b>Type:</b> &nbsp;{{$quest->type ? 'Multiple choice' : 'Short answer'}}</p>
                                     <p ><b>Score:</b> &nbsp;{{$quest->score}}</p>
@@ -96,7 +96,7 @@
                 @endforeach
                 <div class="flex justify-center my-4 ">
                     <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
-                        <button type="button" style="background-color: rgb(0, 180, 0)" class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                        <button type="button" class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                             <i class="bi bi-plus-lg"></i> Add Question
                         </button>
                     </a>
