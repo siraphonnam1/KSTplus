@@ -112,7 +112,7 @@
                                 </ol>
                             </div>
                             <div class="p-4 flex justify-center">
-                                <button type="button" id="addAns" style="background-color: rgb(0, 153, 0)" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 "><i class="bi bi-plus-lg"></i> Add</button>
+                                <button type="button" id="addAns" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 "><i class="bi bi-plus-lg"></i> Add</button>
                             </div>
                         </div>
                         <div class="hidden p-4 rounded-lg bg-gray-50 " id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
@@ -130,7 +130,7 @@
                         <button type="submit" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
                             Save
                         </button>
-                        <button type="button" style="background-color: rgb(255, 112, 112)" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+                        <button type="button" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
                             Cancel
                         </button>
                     </div>
