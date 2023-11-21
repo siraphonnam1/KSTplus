@@ -7,7 +7,7 @@
             <div class="card p-4 pb-2 mb-4">
                 <p class="text-2xl font-bold">Quiz :: {{$quiz->title}}</p>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 py-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
                     <div class="card p-2 rounded-xl flex flex-row bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-600 border-0 text-white shadow">
                         <div class="flex justify-center items-center px-2">
                             <svg class="w-8 h-8 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
