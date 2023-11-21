@@ -58,7 +58,7 @@
                             $count = 1;
                         @endphp
                         @foreach ($answers as $index => $answer)
-                            <button type="button" disabled class="text-gray-900 text-white {{$answer['status'] ? 'bg-green-500' : 'bg-red-500'}} border border-gray-800 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs py-2 px-3 text-center">
+                            <button type="button" style="{{$answer['status'] ? "background-color: rgb(0, 153, 0)" : ''}}" disabled class="text-white {{$answer['status'] ? 'bg-green-500' : 'bg-red-500'}} border border-gray-800 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs py-2 px-3 text-center">
                                 {{$count}}
                             </button>
                             @php
