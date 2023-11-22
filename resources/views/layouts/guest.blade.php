@@ -18,6 +18,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="font-sans text-gray-900 antialiased" >
         <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100" style="background-image: url('{{ asset('img/bg.jpg') }}'); background-size: cover; background-position: center">
