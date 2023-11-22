@@ -46,7 +46,7 @@
                 @foreach ($questions as $index => $quest)
                     <div id="accordion-open" data-accordion="open" class="mb-2">
                         <h2 id="accordion-open-heading{{$index}}">
-                            <button type="button" class="bg-white rounded-xl flex items-center justify-between w-full px-4 py-3 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 "
+                            <button type="button" class="bg-white rounded-xl flex items-center justify-between w-full px-4 py-3 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:text-black focus:ring-4 focus:ring-gray-200 "
                                 data-accordion-target="#accordion-open-body{{$index}}" aria-expanded="false" aria-controls="accordion-open-body{{$index}}">
                                 <span class="flex items-center">{{$index+1}}. {{$quest->title}}</span>
                                 <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
