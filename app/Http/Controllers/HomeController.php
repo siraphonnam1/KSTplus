@@ -39,12 +39,19 @@ class HomeController extends Controller
             $quizzes = quiz::where('create_by', $request->user()->id)->get();
         }
         $tested = Test::where('tester', $request->user()->id)->orderBy('id', 'desc')->get();
-        return view("page.course-detail", compact("id", "lessons", "course", "quizzes", 'tested'));
+        return view("page.courses.course-detail", compact("id", "lessons", "course", "quizzes", 'tested'));
     }
 
     public function allCourse(Request $request) {
         $courses = course::where('permission->all', "true")->paginate(12);
-        return view("page.allcourse", compact("courses"));
+        return view("page.courses.allcourse", compact("courses"));
+    }
+
+    public function dashboard() {
+        $courses = course::orderBy('id', 'desc')->get();
+        $dpms = department::all();
+        $tests = Test::orderBy('id', 'desc')->get();
+        return view("page.dashboard", compact('courses', 'dpms', 'tests'));
     }
 
     public function main(Request $request) {
@@ -76,7 +83,7 @@ class HomeController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
         $courses = course::all();
-        return view("page.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
+        return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
     }
 
     public function userDetail(Request $request, $id) {
@@ -88,7 +95,7 @@ class HomeController extends Controller
         $permissions = Permission::all();
         $courses = course::all();
         $ucourse = course::whereIn("id", $user->courses ?? [])->get();
-        return view("page.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse'));
+        return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse'));
     }
 
     public function requestAll(Request $request) {
@@ -97,7 +104,7 @@ class HomeController extends Controller
     public function ownCourse(Request $request) {
         $courses = course::where("teacher", $request->user()->id)->get();
 
-        return view("page.own-course", compact("courses"));
+        return view("page.courses.own-course", compact("courses"));
     }
 
     public function classroom(Request $request) {
@@ -108,7 +115,7 @@ class HomeController extends Controller
                  })->paginate(12);
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
         $dpms = department::all();
-        return view("page.myclassroom", compact("courses","dpms"));
+        return view("page.courses.myclassroom", compact("courses","dpms"));
     }
 
     public function sendMessage(Request $request)

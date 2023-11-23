@@ -11,7 +11,7 @@ use App\Models\quiz;
 class TestController extends Controller
 {
     public function index($cid , $qzid) {
-        return view("page.test", compact('qzid', 'cid'));
+        return view("page.quizzes.test", compact('qzid', 'cid'));
     }
 
     public function testSummary() {
@@ -32,7 +32,7 @@ class TestController extends Controller
         session()->forget('quizId');
         session()->forget('courseId');
         session()->forget('answers');
-        return view("page.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
+        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
     }
 
     public function finishTest(Request $request) {

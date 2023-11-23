@@ -61,6 +61,9 @@
                             <a href="{{route('manage')}}" >
                                 {{ __('Manage') }}
                             </a>
+                            <a href="{{route('dashboard')}}" >
+                                {{ __('Dashboard') }}
+                            </a>
                         @endhasrole
                     @endhasanyrole
                 </div>

@@ -5,9 +5,13 @@
                 <p class="fs-2 fw-bold">Quizzes</p>
 
                 <!-- Add quiz Modal -->
-                <button data-modal-target="static-modal" data-modal-toggle="static-modal" class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center " type="button">
+                <button data-modal-target="static-modal" data-tooltip-target="tooltip-add" data-modal-toggle="static-modal" class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center " type="button">
                     <i class="bi bi-journal-plus"></i>
                 </button>
+                <div id="tooltip-add" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                    Add Quiz
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
 
                 <!-- Main modal -->
                 <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -132,7 +136,11 @@
                                         {{ $quiz->shuffle_quest ? "Yes" : "No" }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a href="#" data-modal-target="static-modal{{$quiz->id}}" data-modal-toggle="static-modal{{$quiz->id}}" class="text-lg text-blue-400  hover:text-blue-700 hover:underline"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="#" data-modal-target="static-modal{{$quiz->id}}" data-tooltip-target="tooltip-edit" data-modal-toggle="static-modal{{$quiz->id}}" class="text-lg text-blue-400  hover:text-blue-700 hover:underline"><i class="bi bi-pencil-square"></i></a>
+                                        <div id="tooltip-edit" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Edit Quiz
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
 
                                         <!-- Main modal -->
                                         <div id="static-modal{{$quiz->id}}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -211,8 +219,23 @@
                                             </div>
                                         </div>
 
-                                        <a href="#" data-quiz-id="{{$quiz->id}}" class="delQuizBtn text-lg text-red-500  hover:text-red-700 hover:underline"><i class="bi bi-trash3"></i></a>
-                                        <a href="{{route('quiz.detail', ['id' => $quiz->id])}}" class="text-lg text-purple-500  hover:text-purple-700 hover:underline"><i class="bi bi-box-arrow-in-right"></i></a>
+                                        <a href="#" data-quiz-id="{{$quiz->id}}" data-tooltip-target="tooltip-delete" class="delQuizBtn text-lg text-red-500  hover:text-red-700 hover:underline"><i class="bi bi-trash3"></i></a>
+                                        <div id="tooltip-delete" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Delete Quiz
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+
+                                        <a href="{{route('quiz.detail', ['id' => $quiz->id])}}" data-tooltip-target="tooltip-detail" class="text-lg text-purple-500  hover:text-purple-700 hover:underline"><i class="bi bi-box-arrow-in-right"></i></a>
+                                        <div id="tooltip-detail" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Quiz Detail
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+
+                                        <a href="{{ route('quiz.record', ['qid' => $quiz->id]) }}" data-tooltip-target="tooltip-record" class="text-lg text-emerald-500  hover:text-emerald-700 hover:underline"><i class="bi bi-clipboard2-data"></i></a>
+                                        <div id="tooltip-record" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Quiz Record
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

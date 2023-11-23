@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/course/own', [HomeController::class, 'ownCourse'])->name('ownCourse');
     Route::get('/course/classroom', [HomeController::class, 'classroom'])->name('classroom');
     Route::get('/manage', [ManageController::class, 'index'])->name('manage');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     // Manage
     Route::post('/manage/addAgency', [ManageController::class,'createAgency'])->name('add.agency');
@@ -98,6 +99,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/quiz/question/update/{id}', [QuizController::class, 'updateQuestion'])->name('quiz.quest.update');
     Route::get('/quiz/question/delete/{id}', [QuizController::class, 'delQuestion'])->name('quiz.quest.del');
     Route::get('/quiz/delete/{id}', [QuizController::class, 'destroy'])->name('quiz.del');
+    Route::get('/quiz/record/{qid}', [QuizController::class, 'testRecord'])->name('quiz.record');
+
 
     // Take Exam
     Route::get('/test/start/{cid}/{qzid}', [TestController::class, 'index'])->name('test.start');

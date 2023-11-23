@@ -28,7 +28,7 @@ class ManageController extends Controller
         $roles = Role::all();
         $courses = course::all();
         $permissions = Permission::all();
-        return view("page.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
+        return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
     }
 
     /**

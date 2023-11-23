@@ -256,7 +256,7 @@ class CourseController extends Controller
         // Load departments for the filters
         $dpms = department::all();
         // Return the search view with the results and departments
-        return view('page.allcourse', compact('courses', 'dpms', 'departmentIds', 'search'));
+        return view('page.courses.allcourse', compact('courses', 'dpms', 'departmentIds', 'search'));
     }
 
     public function searchMy(Request $request)
@@ -305,7 +305,7 @@ class CourseController extends Controller
         $dpms = Department::all();
 
         // Return the search view with the results and departments
-        return view('page.myclassroom', compact('courses', 'dpms', 'departmentIds', 'search'));
+        return view('page.courses.myclassroom', compact('courses', 'dpms', 'departmentIds', 'search'));
     }
 
 

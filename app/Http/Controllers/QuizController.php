@@ -5,29 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\question;
 use App\Models\quiz;
+use App\Models\Test;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class QuizController extends Controller
 {
     public function index() {
         $quizs = quiz::all();
-        return view("page.quizzes", compact("quizs"));
+        return view("page.quizzes.allquizzes", compact("quizs"));
+    }
+
+    public function testRecord($qid) {
+        $quiz = quiz::find($qid);
+        $testes = Test::where('quiz', $qid)->orderBy('id', 'desc')->get();
+        return view("page.quizzes.test_record", compact("qid", "testes", "quiz"));
     }
 
     public function addQuestion($id) {
         $quiz = quiz::find($id);
-        return view("page.add_question", compact("id", "quiz"));
+        return view("page.quizzes.add_question", compact("id", "quiz"));
     }
 
     public function editQuestion($qid, $id) {
         $quest = Question::find($id);
-        return view("page.quest_edit", compact("id","quest"));
+        return view("page.quizzes.quest_edit", compact("id","quest"));
     }
 
     public function quizDetail($id) {
         $questions = question::where("quiz", $id)->get();
         $quiz = quiz::find($id);
-        return view("page.quiz_detail", compact("id", "questions", 'quiz'));
+        return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz'));
     }
 
     public function store(Request $request) {
