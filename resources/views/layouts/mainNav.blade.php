@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="border-b border-gray-100" style="background-color: var(--primary-color); border: unset;">
+<nav x-data="{ open: false }" class="z-10 sticky top-0 border-b border-gray-100" style="background-color: var(--primary-color); border: unset;">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">

@@ -15,7 +15,8 @@ use App\Models\course;
 use App\Models\quiz;
 use App\Notifications\MessageNotification;
 use App\Models\Test;
-
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 class HomeController extends Controller
 {
@@ -39,19 +40,39 @@ class HomeController extends Controller
             $quizzes = quiz::where('create_by', $request->user()->id)->get();
         }
         $tested = Test::where('tester', $request->user()->id)->orderBy('id', 'desc')->get();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited course detail',
+        [
+            'user_id' => auth()->id(),
+            'content' => $course,
+        ]);
         return view("page.courses.course-detail", compact("id", "lessons", "course", "quizzes", 'tested'));
     }
 
     public function allCourse(Request $request) {
         $courses = course::where('permission->all', "true")->paginate(12);
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited all course',
+        [
+            'user_id' => auth()->id(),
+        ]);
         return view("page.courses.allcourse", compact("courses"));
     }
 
-    public function dashboard() {
+    public function dashboard(Request $request) {
         $courses = course::orderBy('id', 'desc')->get();
         $dpms = department::all();
         $tests = Test::orderBy('id', 'desc')->get();
-        return view("page.dashboard", compact('courses', 'dpms', 'tests'));
+        $activitys = ActivityLog::orderBy('id', 'desc')->get();
+        $courseDel = course::onlyTrashed()->get();
+        $quizDel = quiz::onlyTrashed()->get();
+        // $record->restore();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited dashboard',
+        [
+            'user_id' => auth()->id(),
+        ]);
+        return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel'));
     }
 
     public function main(Request $request) {
@@ -65,6 +86,11 @@ class HomeController extends Controller
                  ->where(function ($query) use ($request) {
                      $query->Where('dpm', $request->user()->dpm);
                  })->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+
+            Log::channel('activity')->info('User '. $request->user()->name .' visited main page',
+            [
+                'user' => $request->user(),
+            ]);
             return view("page.main", compact("allcourses", "dpms", "dpmcourses"));
         }
     }
@@ -72,6 +98,11 @@ class HomeController extends Controller
     public function home(Request $request) {
         $courses = course::latest()->take(6)->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->get();
         $user = $request->user();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited Home page',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.home", compact("courses", 'user'));
     }
 
@@ -83,6 +114,11 @@ class HomeController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
         $courses = course::all();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited alluser',
+        [
+            'user_id' => $request->user(),
+        ]);
         return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
     }
 
@@ -95,15 +131,30 @@ class HomeController extends Controller
         $permissions = Permission::all();
         $courses = course::all();
         $ucourse = course::whereIn("id", $user->courses ?? [])->get();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited userDetail',
+        [
+            'content' => $id,
+            'user' => $request->user(),
+        ]);
         return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse'));
     }
 
     public function requestAll(Request $request) {
+        Log::channel('activity')->info('User '. $request->user()->name .' visited requestAll',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.requestAll");
     }
+
     public function ownCourse(Request $request) {
         $courses = course::where("teacher", $request->user()->id)->get();
 
+        Log::channel('activity')->info('User '. $request->user()->name .' visited ownCourse',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.courses.own-course", compact("courses"));
     }
 
@@ -115,6 +166,11 @@ class HomeController extends Controller
                  })->paginate(12);
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
         $dpms = department::all();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited classroom',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.courses.myclassroom", compact("courses","dpms"));
     }
 
@@ -138,6 +194,18 @@ class HomeController extends Controller
             foreach ($staffUsers as $staffUser) {
                 $staffUser->notify(new MessageNotification($noticText));
             }
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Notification',
+                'content' => $text,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' sendMessage',
+            [
+                'user' => $request->user(),
+                'message' => $text,
+            ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -153,6 +221,12 @@ class HomeController extends Controller
             return response()->json(['status' => 'success'], 200);
         }
 
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'notification',
+            'content' => $notification->id,
+            'note' => 'read',
+        ]);
         return response()->json(['status' => 'error'], 404);
     }
 
@@ -169,6 +243,12 @@ class HomeController extends Controller
             // Save the modified notification back to the database
             $notification->save();
 
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'notification',
+                'content' => $notification->id,
+                'note' => 'set success',
+            ]);
             return response()->json(['status' => 'success'], 200);
         }
 

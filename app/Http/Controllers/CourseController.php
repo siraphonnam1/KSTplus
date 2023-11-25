@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -53,6 +55,17 @@ class CourseController extends Controller
         // query
         $courses = $courses2->paginate(12);
 
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'search',
+            'content' => $search,
+            'note' => 'dpm',
+        ]);
+        Log::channel('activity')->info('User '. $request->user()->name .' search dpm',
+            [
+                'user_id' => auth()->id(),
+                'content' => $search,
+            ]);
         return view('partials.courses', compact('courses'));
     }
 
@@ -67,6 +80,17 @@ class CourseController extends Controller
                                 ->orWhere('code', 'like', '%'.$search.'%');
                         })->paginate(12);
 
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'search',
+            'content' => $search,
+            'note' => 'all course',
+        ]);
+        Log::channel('activity')->info('User '. $request->user()->name .' search all course',
+        [
+            'user_id' => auth()->id(),
+            'content' => $search,
+        ]);
         return view('partials.courses', compact('courses'));
     }
 
@@ -115,6 +139,18 @@ class CourseController extends Controller
                 'dpm' => $request->user()->dpm,
                 'code' => ($dpmName->prefix).($courseNum),
                 'img' => $filename ?? null,
+            ]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Course',
+                'content' => $course->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' store course',
+            [
+                'user_id' => auth()->id(),
+                'course_id' => $course->id,
             ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
@@ -168,6 +204,18 @@ class CourseController extends Controller
             }
 
             $courses->update($updateData);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Course',
+                'content' => $courses->id,
+                'note' => 'update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update course',
+            [
+                'user_id' => auth()->id(),
+                'course_id' => $courses->id,
+            ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -188,6 +236,19 @@ class CourseController extends Controller
             } else if ($request->deltype == 'lesson') {
                 lesson::find($request->delid)->delete();
             }
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => $request->deltype,
+                'content' => $request->delid,
+                'note' => 'delete',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' delete course or lesson',
+            [
+                'user_id' => auth()->id(),
+                'delete_type' => $request->deltype,
+                'delete_id' => $request->delid
+            ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -221,6 +282,18 @@ class CourseController extends Controller
 
             $user->courses = $courseContainer;
             $user->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Course',
+                'content' => $course->id,
+                'note' => 'enroll',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' enroll course',
+            [
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+            ]);
             return redirect()->route('course.detail', ['id' => $cid]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -256,6 +329,18 @@ class CourseController extends Controller
         // Load departments for the filters
         $dpms = department::all();
         // Return the search view with the results and departments
+
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'all course',
+            'content' => $search,
+            'note' => 'search',
+        ]);
+        Log::channel('activity')->info('User '. $request->user()->name .' search all course',
+        [
+            'user_id' => auth()->id(),
+            'content' => $search,
+        ]);
         return view('page.courses.allcourse', compact('courses', 'dpms', 'departmentIds', 'search'));
     }
 
@@ -304,6 +389,18 @@ class CourseController extends Controller
         // Load departments for the filters
         $dpms = Department::all();
 
+
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'My course',
+            'content' => $search,
+            'note' => 'search',
+        ]);
+        Log::channel('activity')->info('User '. $request->user()->name .' search my course',
+        [
+            'user_id' => auth()->id(),
+            'content' => $search,
+        ]);
         // Return the search view with the results and departments
         return view('page.courses.myclassroom', compact('courses', 'dpms', 'departmentIds', 'search'));
     }
@@ -319,6 +416,18 @@ class CourseController extends Controller
                 'topic'=> $request->topic,
                 'desc'=> $request->desc ?? '',
                 'course'=> $request->courseid,
+            ]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'lesson',
+                'content' => $lesson->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' add lesson',
+            [
+                'user_id' => auth()->id(),
+                'lesson_id' => $lesson->id,
             ]);
             alert()->success('Success','Lesson has been saved!');
             return back();
@@ -340,6 +449,18 @@ class CourseController extends Controller
             $lesson->update([
                 'topic' => $request->topic,
                 'desc' => $request->desc
+            ]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'lesson',
+                'content' => $lesson->id,
+                'note' => 'update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update lesson',
+            [
+                'user_id' => auth()->id(),
+                'content' => $lesson,
             ]);
             alert()->success('Success','Lesson has been saved!');
             return back();
@@ -422,6 +543,18 @@ class CourseController extends Controller
                     $lesson->save();
                 }
             }
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'sublesson',
+                'content' => $lesson->id,
+                'note' => 'add sublesson',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' add sub lesson',
+            [
+                'user_id' => auth()->id(),
+                'content' => $lesson,
+            ]);
             return response()->json(['success' => $subContainer]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -456,6 +589,19 @@ class CourseController extends Controller
 
             $lesson->sub_lessons = $subContainer;
             $lesson->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'sublesson',
+                'content' => $lesson->id,
+                'note' => 'remove',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' delete sub lesson',
+            [
+                'user_id' => auth()->id(),
+                'content' => $lesson,
+                'added' => $subContainer,
+            ]);
             return response()->json(['success' => $subContainer]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);

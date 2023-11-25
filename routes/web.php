@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/addPerm', [ManageController::class,'createPerm']);
     Route::post('/manage/delete', [ManageController::class,'deleteData']);
     Route::post('/manage/update', [ManageController::class,'update']);
+    Route::get('/restore/{resType}/{resId}', [ManageController::class,'restore']);
 
     //User
     Route::post('/user/register', [UserController::class,'create'])->name('user.register');

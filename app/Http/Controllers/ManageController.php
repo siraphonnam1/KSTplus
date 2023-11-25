@@ -13,14 +13,16 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
+use App\Models\quiz;
 
 class ManageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $agns = agency::all();
         $brns = branch::all();
@@ -28,6 +30,11 @@ class ManageController extends Controller
         $roles = Role::all();
         $courses = course::all();
         $permissions = Permission::all();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited manage',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
     }
 
@@ -51,6 +58,18 @@ class ManageController extends Controller
             $agn->address = $validatedData['address'];
             $agn->contact = $validatedData['contact'];
             $agn->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Agency',
+                'content' => $agn->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create Agency',
+            [
+                'user' => $request->user(),
+                'agn_created' => $agn,
+            ]);
             return response()->json(['success' => $agn]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
@@ -74,6 +93,18 @@ class ManageController extends Controller
             $brn->name = $name;
             $brn->agency = $agency;
             $brn->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Branch',
+                'content' => $brn->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create Branch',
+            [
+                'user' => $request->user(),
+                'brn_created' => $brn,
+            ]);
             return response()->json(['success' => $name]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
@@ -90,6 +121,18 @@ class ManageController extends Controller
         }
         try {
             $role = Role::create(['name' => $request->name]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Role',
+                'content' => $role->name,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create role',
+            [
+                'user' => $request->user(),
+                'role_created' => $role,
+            ]);
             return response()->json(['success' => $role]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
@@ -106,6 +149,18 @@ class ManageController extends Controller
         }
         try {
             $permission = Permission::create(['name' => $request->name]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'permission',
+                'content' => $permission->name,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create permission',
+            [
+                'user' => $request->user(),
+                'perm_created' => $permission,
+            ]);
             return response()->json(['success' => $permission]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
@@ -134,6 +189,18 @@ class ManageController extends Controller
             $dpm->branch = $branch;
             $dpm->agency = $brn->agency;
             $dpm->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Department',
+                'content' => $dpm->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create Department',
+            [
+                'user' => $request->user(),
+                'dpm_created' => $dpm,
+            ]);
             return response()->json(['success' => $name.' '.$branch]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
@@ -153,18 +220,40 @@ class ManageController extends Controller
             } elseif ($request->type == 'perm') {
                 Permission::findByName($request->delid)->delete();
             };
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'delete Data',
+                'content' => $request->type. ' : '. $request->delid,
+                'note' => 'delete',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' deleted data',
+            [
+                'user' => $request->user(),
+                'delete_type' => $request->type,
+                'delete_id' => $request->delid,
+            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function restore($resType , $resId)
     {
-        //
+        try {
+            if ($resType == 'course') {
+                $course = course::withTrashed()->find($resId);
+                $course->restore();
+            } elseif ($resType == 'quiz') {
+                $quiz = quiz::withTrashed()->find($resId);
+                $quiz->restore();
+            }
+            return response()->json(['success' => $resType ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
+        }
+
     }
 
     /**
@@ -209,6 +298,19 @@ class ManageController extends Controller
                 $dpm->agency = $brn->agency;
                 $dpm->save();
             }
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Data',
+                'content' => $request->editType. ' : '. $request->name,
+                'note' => 'Update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' updated data',
+            [
+                'user' => $request->user(),
+                'update_type' => $request->editType,
+                'data' => $request,
+            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);

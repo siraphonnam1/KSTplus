@@ -166,12 +166,167 @@
 
                 {{-- log content --}}
                 <div class="hidden p-4 rounded-lg bg-gray-50 " id="log" role="tabpanel" aria-labelledby="log-tab">
-                    <p class="text-sm text-gray-500 ">This is some placeholder content the <strong class="font-medium text-gray-800 ">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500" id="log-table">
+                            <thead class="text-xs text-white uppercase bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        #
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        User
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Module
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Action
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Note
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($activitys as $index => $log)
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                            {{$index + 1}}
+                                        </th>
+                                        <td class="px-6 py-2">
+                                            {{ optional($log->getUser)->name }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ $log->module }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ $log->note }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ $log->content }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {{-- history content --}}
-                <div class="hidden p-4 rounded-lg bg-gray-50 " id="history" role="tabpanel" aria-labelledby="history-tab">
-                    <p class="text-sm text-gray-500 ">This is some placeholder content the <strong class="font-medium text-gray-800 ">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="hidden p-4 rounded-lg " id="history" role="tabpanel" aria-labelledby="history-tab">
+                    {{-- Course Deleted --}}
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-20 bg-gray-50">
+                        <p class="font-bold text-2xl my-2">Course Deleted</p>
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500" id="courseDel-table">
+                            <thead class="text-xs text-white uppercase bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">
+                                        #
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Title
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Teacher
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Dpm
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Delete_at
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($courseDel as $index => $course)
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                            {{$index + 1}}
+                                        </th>
+                                        <td class="px-6 py-2 text-nowrap" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">
+                                            {{ $course->code }} : {{ Str::limit($course->title, 20) }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ optional($course->getTeacher)->name }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ optional($course->getDpm)->name }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ Carbon\Carbon::parse($course->deleted_at)->format('d-m-Y') }}
+                                        </td>
+                                        <td class="">
+                                            <button type="button" data-res-id="{{$course->id}}" data-res-type="course" class="restoreBtn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 my-2 focus:outline-none">
+                                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {{-- Quiz Deleted --}}
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-50">
+                        <p class="font-bold text-2xl my-2">Quiz Deleted</p>
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500" id="quizDel-table">
+                            <thead class="text-xs text-white uppercase bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">
+                                        #
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Title
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Create_By
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Pass Score
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Delete_at
+                                    </th>
+                                    <th scope="col" class="px-4 py-3">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($quizDel as $index => $quiz)
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                            {{$index + 1}}
+                                        </th>
+                                        <td class="px-6 py-2 text-nowrap" data-toggle="tooltip" data-placement="top" title="{{ $quiz->title }}">
+                                            {{ Str::limit($quiz->title, 20) }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ optional($quiz->getCreated)->name }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ $quiz->pass_score }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ Carbon\Carbon::parse($quiz->deleted_at)->format('d-m-Y') }}
+                                        </td>
+                                        <td class="">
+                                            <button type="button" data-res-id="{{$quiz->id}}" data-res-type="quiz" class="restoreBtn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 my-2 focus:outline-none">
+                                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             {{-- End Tabs Contents --}}
@@ -203,6 +358,14 @@
                 ],
                 hoverOffset: 4
             }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            }
         },
     });
 
@@ -240,6 +403,12 @@
                     beginAtZero: true
                 }
             },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            }
         }
     });
 
@@ -262,6 +431,101 @@
             info: true,         // 'Showing x to y of z entries' string
             lengthChange: true, // Allows the user to change number of rows shown
             pageLength: 5,      // Set number of rows per page
+        });
+    });
+
+    $(document).ready(function() {
+        $('#log-table').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 10,      // Set number of rows per page
+        });
+    });
+
+    $(document).ready(function() {
+        $('#courseDel-table').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 10,      // Set number of rows per page
+        });
+    });
+
+    $(document).ready(function() {
+        $('#quizDel-table').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 10,      // Set number of rows per page
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        $(document).ready(function() {
+            $('.restoreBtn').click(function() {
+                // Get the notification ID from the data attribute
+                const resId = $(this).data('res-id');
+                const resType = $(this).data('res-type');
+                Swal.fire({
+                    title: `Are you sure?`,
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, restore it!',
+                    showLoaderOnConfirm: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/restore/${resType}/${resId}`, // You need to define this route in your web.php
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                // You can add some code here to handle a successful response
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Success!',
+                                        `${response.success} has been restore.`,
+                                        'success'
+                                    ).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.reload()
+                                        }
+                                    });
+                                    console.log("success: ",response.success);
+                                } else {
+                                    Swal.fire(
+                                        'Sorry!',
+                                        `${response.success} has not restore.`,
+                                        'error'
+                                    );
+                                    console.log("error: ",response.error);
+                                };
+                                // window.location.reload()
+                            },
+                            error: function(error) {
+                                // You can add some error handling here
+                                Swal.fire(
+                                    'Sorry!',
+                                    'Data has not restore.',
+                                    'error'
+                                )
+                                console.log("error: ",error);
+                            }
+                        });
+                    }
+                })
+
+            });
         });
     });
 </script>

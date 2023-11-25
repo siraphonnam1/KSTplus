@@ -8,33 +8,64 @@ use App\Models\quiz;
 use App\Models\Test;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 class QuizController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $quizs = quiz::all();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
+        [
+            'user' => $request->user(),
+        ]);
         return view("page.quizzes.allquizzes", compact("quizs"));
     }
 
-    public function testRecord($qid) {
+    public function testRecord(Request $request, $qid) {
         $quiz = quiz::find($qid);
         $testes = Test::where('quiz', $qid)->orderBy('id', 'desc')->get();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited test record',
+        [
+            'user' => $request->user(),
+            'quiz' => $quiz
+        ]);
         return view("page.quizzes.test_record", compact("qid", "testes", "quiz"));
     }
 
-    public function addQuestion($id) {
+    public function addQuestion(Request $request, $id) {
         $quiz = quiz::find($id);
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited add question',
+        [
+            'user' => $request->user(),
+            'quiz' => $quiz,
+        ]);
         return view("page.quizzes.add_question", compact("id", "quiz"));
     }
 
-    public function editQuestion($qid, $id) {
+    public function editQuestion(Request $request, $qid, $id) {
         $quest = Question::find($id);
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited edit question',
+        [
+            'user' => $request->user(),
+            'question' => $quest,
+        ]);
         return view("page.quizzes.quest_edit", compact("id","quest"));
     }
 
-    public function quizDetail($id) {
+    public function quizDetail(Request $request, $id) {
         $questions = question::where("quiz", $id)->get();
         $quiz = quiz::find($id);
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited quiz detail',
+        [
+            'user' => $request->user(),
+            'quiz' => $quiz,
+        ]);
         return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz'));
     }
 
@@ -52,6 +83,18 @@ class QuizController extends Controller
                 'shuffle_quest'=> $request->shuffq ?? false,
                 'create_by'=> $request->user()->id,
                 'showAns' => $request->showAns ?? false,
+            ]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Quiz',
+                'content' => $quiz->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' store quiz',
+            [
+                'user' => $request->user(),
+                'quiz' => $quiz,
             ]);
             return redirect()->back()->with('success','Quiz has been saved.');
         } catch (\Throwable $th) {
@@ -76,6 +119,18 @@ class QuizController extends Controller
                 'create_by'=> $request->user()->id,
                 'showAns' => $request->showAns ?? false,
             ]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Quiz',
+                'content' => $quiz->id,
+                'note' => 'update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update quiz',
+            [
+                'user' => $request->user(),
+                'quiz' => $quiz,
+            ]);
             return redirect()->back()->with('success','Quiz has been updated.');
         } catch (\Throwable $th) {
             //throw $th;
@@ -83,9 +138,21 @@ class QuizController extends Controller
         }
     }
 
-    public function destroy($id) {
+    public function destroy(Request $request, $id) {
         try {
             $quiz = quiz::find($id)->delete();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Quiz',
+                'content' => $quiz->id,
+                'note' => 'delete',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' delete quiz',
+            [
+                'user' => $request->user(),
+                'quiz' => $quiz,
+            ]);
             return response()->json(['success' => 'Question has been deleted.']);
         } catch (\Throwable $th) {
             //throw $th;
@@ -127,6 +194,17 @@ class QuizController extends Controller
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->save();
 
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Question',
+                'content' => $question->id,
+                'note' => 'store',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' store question',
+            [
+                'user' => $request->user(),
+                'question' => $question,
+            ]);
             return redirect()->route('quiz.detail', ['id' => $id])->with('success','Question has been saved.');
         } catch (\Throwable $th) {
             //throw $th;
@@ -167,6 +245,17 @@ class QuizController extends Controller
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->save();
 
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Question',
+                'content' => $question->id,
+                'note' => 'update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update question',
+            [
+                'user' => $request->user(),
+                'question' => $question,
+            ]);
             return redirect()->route('quiz.detail', ['id' => $question->quiz])->with('success','Question has been updated.');
 
         } catch (\Throwable $th) {
@@ -175,9 +264,21 @@ class QuizController extends Controller
         }
     }
 
-    public function delQuestion($id) {
+    public function delQuestion(Request $request, $id) {
         try {
-            question::find($id)->delete();
+            $question = question::find($id)->delete();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Question',
+                'content' => $question->id,
+                'note' => 'delete',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' delete question',
+            [
+                'user' => $request->user(),
+                'question' => $question,
+            ]);
             return response()->json(['success' => 'Question has been deleted.']);
         } catch (\Throwable $th) {
             //throw $th;

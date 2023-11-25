@@ -7,14 +7,23 @@ use Illuminate\Http\Request;
 use App\Models\question;
 use Carbon\Carbon;
 use App\Models\quiz;
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 class TestController extends Controller
 {
-    public function index($cid , $qzid) {
+    public function index(Request $request, $cid , $qzid) {
+
+        Log::channel('activity')->info('User '. $request->user()->name .' start test',
+        [
+            'user' => $request->user(),
+            'course' => $cid,
+            'quiz' => $qzid
+        ]);
         return view("page.quizzes.test", compact('qzid', 'cid'));
     }
 
-    public function testSummary() {
+    public function testSummary(Request $request) {
         $scores = session('scores', 0);
         $quests = session('quests', []);
         $totalScore = session('totalScore', 0);
@@ -32,6 +41,13 @@ class TestController extends Controller
         session()->forget('quizId');
         session()->forget('courseId');
         session()->forget('answers');
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited test summary',
+        [
+            'user' => $request->user(),
+            'course' => $cid,
+            '$quiz' => $quiz
+        ]);
         return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
     }
 
@@ -78,6 +94,12 @@ class TestController extends Controller
             'answers' => $answers,
         ]);
 
+        ActivityLog::create([
+            'user' => auth()->id(),
+            'module' => 'Test',
+            'content' => $test->id,
+            'note' => 'finish',
+        ]);
         session()->forget('testResults');
         return redirect()->route('test.summary');
         // return view("page.test_summary", compact("scores", "quests", "totalScore", "timeUsege"));

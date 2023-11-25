@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Redirect;
 Use Alert;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Exception;
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 class UserController extends Controller
 {
@@ -65,6 +67,18 @@ class UserController extends Controller
                 }
             }
             $user->assignRole($request->role);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => $user->id,
+                'note' => 'create',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' create new User',
+            [
+                'user' => $request->user(),
+                'user_create' => $user,
+            ]);
             alert()->success('Success','User has been created!');
         } catch (\Throwable $th) {
             alert()->error('Some thing worng!', $th->getMessage());
@@ -136,6 +150,18 @@ class UserController extends Controller
             }
             $user->assignRole($request->role);
             $user->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => $user->id,
+                'note' => 'update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update user',
+            [
+                'user' => $request->user(),
+                'user_update' => $user,
+            ]);
             return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -148,7 +174,19 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         try {
-            User::find( $request->delid )->delete();
+            $user = User::find( $request->delid )->delete();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => $user->id,
+                'note' => 'delete',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' delete user',
+            [
+                'user' => $request->user(),
+                'user_destroy' => $user,
+            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -160,6 +198,18 @@ class UserController extends Controller
         try {
             $user = User::find( $request->uid );
             $user->update(['startlt'=> $request->date]);
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => $user->id,
+                'note' => 'renew',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' renew user',
+            [
+                'user' => $request->user(),
+                'user_renew' => $user,
+            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -192,6 +242,19 @@ class UserController extends Controller
             }
             $user->courses = $courseContainer;
             $user->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => json_encode($request->courses),
+                'note' => 'add course',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
+            [
+                'user' => $request->user(),
+                'user_added' => $user,
+                'course_add' => $courses,
+            ]);
             return response()->json(['success' => $stdContainer ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -226,6 +289,18 @@ class UserController extends Controller
             $user->courses = $userCourse;
             $user->save();
             $course->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => $course->id,
+                'note' => 'remove course',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' remove course from user',
+            [
+                'user' => $request->user(),
+                'user_remove_from' => $user,
+            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);

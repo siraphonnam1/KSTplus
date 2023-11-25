@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 
 class ProfileController extends Controller
 {
@@ -19,6 +20,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        Log::channel('activity')->info('User '. $request->user()->name .' visited user profile',
+        [
+            'user' => $request->user(),
+        ]);
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
@@ -34,6 +39,18 @@ class ProfileController extends Controller
             $user->name = $request->name;
             $user->username = $request->email;
             $user->save();
+
+            ActivityLog::create([
+                'user' => auth()->id(),
+                'module' => 'Profile',
+                'content' => $user->id,
+                'note' => 'Update',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' update user profile',
+            [
+                'user' => $request->user(),
+                'user_update' => $user,
+            ]);
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Throwable $th) {
             //throw $th;
@@ -50,6 +67,16 @@ class ProfileController extends Controller
                 $request->user()->fill(['icon' => $fileName]);
                 $request->user()->save();
 
+                ActivityLog::create([
+                    'user' => auth()->id(),
+                    'module' => 'Icon',
+                    'content' => $request->user()->id,
+                    'note' => 'Update',
+                ]);
+                Log::channel('activity')->info('User '. $request->user()->name .' updated user icon',
+                [
+                    'user' => $request->user(),
+                ]);
                 return Redirect::route('profile.edit')->with('status', 'profile-updated');
             } catch (\Throwable $th) {
                 return Redirect::route('profile.edit')->with('status', 'profile-updated-error');
@@ -84,6 +111,12 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+
+        Log::channel('activity')->info('User '. $request->user()->name .' delete user account',
+        [
+            'user' => $request->user(),
+            'delete_user' => $user,
+        ]);
         return Redirect::to('/');
     }
 }
