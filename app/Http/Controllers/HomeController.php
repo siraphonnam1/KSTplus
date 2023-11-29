@@ -16,7 +16,7 @@ use App\Models\quiz;
 use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 use PDF;
 
 class HomeController extends Controller
