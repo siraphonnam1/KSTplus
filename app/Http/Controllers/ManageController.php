@@ -253,7 +253,6 @@ class ManageController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
-
     }
 
     /**

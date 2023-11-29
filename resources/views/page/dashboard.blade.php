@@ -75,9 +75,12 @@
                                     </div>
                                     <canvas id="myChart"></canvas>
                                 </div>
-                                <div class="bg-white p-2 rounded shadow-sm min-w-full">
-                                    <div class="flex justify-between mb-3">
+                                <div class="bg-white p-4 rounded shadow-sm min-w-full">
+                                    <div class="flex flex-wrap justify-between mb-3">
                                         <p class="text-2xl font-bold"><i class="bi bi-backpack"></i> Course</p>
+                                        <a href="{{ route('export.pdf', ['type' => 'course']) }}" target="_BLANK">
+                                            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">PDF</button>
+                                        </a>
                                     </div>
                                     <div class="overflow-x-auto">
                                         <table class="table table-hover w-80 sm:w-full table-fixed" id="allcourse-datatable">
@@ -334,6 +337,7 @@
     </div>
 </x-app-layout>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     const ctx = document.getElementById('myChart');
     const testch = document.getElementById('testChart');
@@ -419,7 +423,11 @@
             ordering: true,     // Enables column ordering
             info: true,         // 'Showing x to y of z entries' string
             lengthChange: true, // Allows the user to change number of rows shown
-            pageLength: 5,      // Set number of rows per page
+            pageLength: 10,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: [
+                'excel',
+            ]
         });
     });
 
@@ -431,6 +439,8 @@
             info: true,         // 'Showing x to y of z entries' string
             lengthChange: true, // Allows the user to change number of rows shown
             pageLength: 5,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: ['excel', 'pdf']
         });
     });
 
@@ -442,6 +452,65 @@
             info: true,         // 'Showing x to y of z entries' string
             lengthChange: true, // Allows the user to change number of rows shown
             pageLength: 10,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: [
+                'excel',
+                {
+                    extend: 'pdfHtml5',
+                    text: 'PDF',
+                    orientation: 'landscape', // Landscape orientation to fit wider tables
+                    pageSize: 'A4', // You can choose 'A3' if 'A4' is too small
+                    title: '',
+                    customize: function(doc) {
+                        // Modify the default style
+                        doc.styles.tableBodyEven.alignment = 'center';
+                        doc.styles.tableBodyOdd.alignment = 'center';
+                        doc.styles.title.alignment = 'center'; // Centering the title if you have one
+                        doc.styles.tableHeader.alignment = 'center'; // Centering the header text
+
+                        // Add a title with a larger font size
+                        doc.content.splice(0, 0, {
+                            text: 'Knowledge Service Training',
+                            fontSize: 16,
+                            alignment: 'center',
+                            margin: [0, 0, 0, 10] // Adjust the bottom margin to create space for the subtitle
+                        });
+
+                        // Add a subtitle directly under the title
+                        doc.content.splice(1, 0, {
+                            text: 'User activity log',
+                            fontSize: 12,
+                            alignment: 'center',
+                            margin: [0, 0, 0, 20] // Additional space below the subtitle before the table starts
+                        });
+
+                        // Ensure that there is a content array and that it contains at least one item
+                        if (doc.content && doc.content.length > 0) {
+                            // Find the table in the content array
+                            var table = doc.content.find(function (item) {
+                                return item.table !== undefined;
+                            });
+
+                            // If a table is found, set its widths property
+                            if (table) {
+                                var widths = new Array(table.table.body[0].length).fill('*'); // Fill the array with '*' to distribute space evenly
+                                table.table.widths = widths;
+                            }
+                        }
+
+                        // Optionally set the page margins
+                        var cm = 28.35;
+                        doc.pageMargins = [1.5 * cm, 1.5 * cm, 1.5 * cm, 1.5 * cm]; // Or any other margin you prefer
+
+                        // Ensure that your table headers repeat on each page if the table is long
+                        doc.styles.tableHeader = {
+                            fillColor: '#e3e3e3', // Color for the table header
+                            color: 'black', // Text color for the table header
+                            alignment: 'center' // Center alignment for the header text
+                        };
+                    }
+                }
+            ]
         });
     });
 

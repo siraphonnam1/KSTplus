@@ -17,6 +17,7 @@ use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
 use App\Models\ActivityLog;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -254,5 +255,22 @@ class HomeController extends Controller
 
         return response()->json(['status' => 'error'], 404);
     }
+
+    public function previewPDF($type) {
+        if ($type == 'course') {
+            $data = course::orderBy('id', 'desc')->get();
+        } elseif ($type == 'test') {
+            $data = Test::orderBy('id', 'desc')->get();
+        } elseif ($type == 'activity') {
+            $data = ActivityLog::orderBy('id', 'desc')->get();
+        }
+
+        // Load the view and set paper orientation to landscape
+        $pdf = PDF::loadView('page.exports.allCourse', $data)
+                  ->setPaper('a4', 'landscape'); // Set the paper size to A4 and orientation to landscape
+
+        return $pdf->stream('your_pdf_file.pdf');
+    }
+
 
 }

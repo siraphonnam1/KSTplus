@@ -108,6 +108,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/test/summary', [TestController::class, 'testSummary'])->name('test.summary');
     Route::get('/test/finish', [TestController::class, 'finishTest'])->name('test.finish');
 
+    // Export file
+    Route::get('/export/{type}', [HomeController::class, 'previewPDF'])->name('export.pdf');
+
 
 });
 
