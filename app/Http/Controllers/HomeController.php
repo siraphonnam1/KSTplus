@@ -270,10 +270,10 @@ class HomeController extends Controller
         }
 
         // Load the view and set paper orientation to landscape
-        $pdf = PDF::loadView('page.exports.allCourse', $data)
+        $pdf = PDF::loadView('page.exports.exportData', $data)
                   ->setPaper('a4', 'landscape'); // Set the paper size to A4 and orientation to landscape
 
-        return $pdf->stream('your_pdf_file.pdf');
+        return $pdf->stream('KST_Data.pdf');
     }
 
 
