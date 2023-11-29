@@ -257,12 +257,16 @@ class HomeController extends Controller
     }
 
     public function previewPDF($type) {
+        $data = [];
         if ($type == 'course') {
-            $data = course::orderBy('id', 'desc')->get();
+            $courses = course::orderBy('id', 'desc')->get();
+            $data = ['courses' => $courses];
         } elseif ($type == 'test') {
-            $data = Test::orderBy('id', 'desc')->get();
+            $tests = Test::orderBy('id', 'desc')->get();
+            $data = ['tests' => $tests];
         } elseif ($type == 'activity') {
-            $data = ActivityLog::orderBy('id', 'desc')->get();
+            $activitys = ActivityLog::orderBy('id', 'desc')->get();
+            $data = ['activitys' => $activitys];
         }
 
         // Load the view and set paper orientation to landscape
