@@ -8,7 +8,7 @@ use App\Models\question;
 use Carbon\Carbon;
 use App\Models\quiz;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 
 class TestController extends Controller
 {
