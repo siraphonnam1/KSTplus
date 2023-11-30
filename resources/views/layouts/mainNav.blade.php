@@ -58,9 +58,9 @@
                         </a>
                         @endhasanyrole
                         @hasrole('admin')
-                            <a href="{{route('manage')}}" >
+                            {{-- <a href="{{route('manage')}}" >
                                 {{ __('Manage') }}
-                            </a>
+                            </a> --}}
                             <a href="{{route('dashboard')}}" >
                                 {{ __('Dashboard') }}
                             </a>
@@ -189,8 +189,11 @@
                         {{ __('Users') }}
                     </x-responsive-nav-link>
                     @hasrole('admin')
-                        <x-responsive-nav-link :href="route('manage')" :active="request()->routeIs('home')">
+                        {{-- <x-responsive-nav-link :href="route('manage')" :active="request()->routeIs('home')">
                             {{ __('Manage') }}
+                        </x-responsive-nav-link> --}}
+                        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('home')">
+                            {{ __('Dashboard') }}
                         </x-responsive-nav-link>
                     @endhasrole
                 @endhasanyrole

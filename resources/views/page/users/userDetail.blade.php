@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-4 mb-2 shadow-sm">
+                <div class="bg-white rounded-4 mb-4 shadow-sm">
                     <div class="text-center my-3">
                         <div class="my-4 flex justify-between px-4">
                             <p class="fs-4 fw-bold">Course</p>
@@ -94,12 +94,12 @@
                                     <tr>
                                         <th scope="col">Action</th>
                                         <th scope="col">code</th>
-                                        <th scope="col" colspan="3" >Course name</th>
+                                        <th scope="col" >Course name</th>
                                         <th scope="col">Progress</th>
                                         <th scope="col">Enroll date</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table-group-divider">
+                                <tbody class="text-start">
                                     @foreach ($ucourse as $course)
                                         @php
                                             $prog_finish = App\Models\progress::where('user_id', $id)->where('course_id', $course->id)->count();
@@ -113,7 +113,7 @@
                                         <tr>
                                             <th scope="row"><button class="text-danger delete-btn" value="{{ $course->id }}" userId="{{ $user->id }}"><i class="bi bi-trash"></i></button></th>
                                             <td>{{ $course->code }}</td>
-                                            <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ Str::limit($course->title, 60) }}</td>
+                                            <td data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ Str::limit($course->title, 60) }}</td>
                                             <td>
                                                 <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                                                     <div class="progress-bar bg-success" style="width: {{$prog_avg}}%">{{$prog_avg}}%</div>
@@ -132,13 +132,220 @@
                             </table>
                         </div>
                     </div>
+                </div>
 
+                <div class="bg-white rounded-4 mb-4 shadow-sm">
+                    <div class="text-center my-3">
+                        <div class="my-4 flex justify-between px-4">
+                            <p class="fs-4 fw-bold">Own Course</p>
+                        </div>
+                        <div>
+                            <table class="table table-hover" id="owncourse-datatable">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">code</th>
+                                        <th scope="col" colspan="3" >Course name</th>
+                                        <th scope="col">Progress</th>
+                                        <th scope="col">Enroll date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    @foreach ($ownCourse as $index => $ocourse)
+                                        @php
+                                            $prog_finish = App\Models\progress::where('user_id', $id)->where('course_id', $ocourse->id)->count();
+                                            $less_all = App\Models\lesson::where('course', $ocourse->id)->count();
+                                            if ($less_all != 0) {
+                                                $prog_avg = $prog_finish * 100 / $less_all;
+                                            } else {
+                                                $prog_avg = 0;
+                                            }
+                                        @endphp
+                                        <tr>
+                                            <th scope="row">{{ $index + 1 }}</th>
+                                            <td>{{ $ocourse->code }}</td>
+                                            <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $ocourse->title }}">{{ Str::limit($ocourse->title, 60) }}</td>
+                                            <td>
+                                                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar bg-success" style="width: {{$prog_avg}}%">{{$prog_avg}}%</div>
+                                                </div>
+                                                {{-- {{$prog_avg}}%
+                                                <div class="w-full bg-gray-200 rounded-full h-2.5 ">
+                                                    <div class="bg-green-600 h-2.5 rounded-full " style="width: {{$prog_avg}}%"></div>
+                                                </div> --}}
+                                            </td>
+                                            <td>
+                                                {{ $ocourse->studens[$user->id] ?? '' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-4 mb-4 shadow-sm">
+                    <div class="text-center my-3">
+                        <div class="my-4 flex justify-between px-4">
+                            <p class="fs-4 fw-bold">Test History</p>
+                        </div>
+                        <div>
+                            <table class="table table-hover " id="test-datatable">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Quiz</th>
+                                        <th scope="col">Score</th>
+                                        <th scope="col">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-start">
+                                    @foreach ($tests as $index => $test)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td class="text-nowrap" data-toggle="tooltip" data-placement="top" title="{{ optional($test->getQuiz)->title }}">{{ optional($test->getQuiz)->title }}</td>
+                                            {{-- <td>{{ optional($test->getTester)->name }}</td> --}}
+                                            <td>{{ $test->score }} / {{ $test->totalScore }}</td>
+                                            <td>{{ Carbon\Carbon::parse($test->start)->format('d-m-Y') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
 <script >
+    $(document).ready(function() {
+        $('#test-datatable').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 5,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'KST_Test_{{$user->name}}_export',
+                },
+                {
+                    extend: 'pdf',
+                    title: '{{ auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
+                    header: "Header",
+                    filename: "kst_test_export",
+                    customize: function (doc) {
+                        // Set table layout to full width
+                        doc.content[1].table.widths =
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                        // Add a subtitle (this example adds it on the second line)
+                        doc.content.splice(1, 0, {
+                            text: '{{$user->name}} Test history',
+                            fontSize: 12,
+                            alignment: 'center',
+                            margin: [0, 0, 0, 10]
+                        });
+
+                        // Set margins to ensure table uses full page width
+                        var cm = 28.35;
+                        doc.pageMargins = [2*cm, cm, 2*cm, cm]; // Or any other margin settings
+                    }
+                }
+            ]
+        });
+    });
+
+    $(document).ready(function() {
+        $('#course-datatable').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 5,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'KST_Test_export',
+                },
+                {
+                    extend: 'pdf',
+                    title: '{{ auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
+                    header: "Header",
+                    filename: "kst_course_export",
+                    customize: function (doc) {
+                        // Set table layout to full width
+                        doc.content[1].table.widths =
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                        // Add a subtitle (this example adds it on the second line)
+                        doc.content.splice(1, 0, {
+                            text: '{{$user->name}} Enroll Course',
+                            fontSize: 12,
+                            alignment: 'center',
+                            margin: [0, 0, 0, 10]
+                        });
+
+                        // Set margins to ensure table uses full page width
+                        var cm = 28.35;
+                        doc.pageMargins = [2*cm, cm, 2*cm, cm]; // Or any other margin settings
+                    }
+                }
+            ]
+        });
+    });
+
+    $(document).ready(function() {
+        $('#owncourse-datatable').DataTable({
+            paging: true,       // Enables pagination
+            searching: true,    // Enables the search box
+            ordering: true,     // Enables column ordering
+            info: true,         // 'Showing x to y of z entries' string
+            lengthChange: true, // Allows the user to change number of rows shown
+            pageLength: 5,      // Set number of rows per page
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'KST_Course_export',
+                },
+                {
+                    extend: 'pdf',
+                    title: '{{ auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
+                    header: "Header",
+                    filename: "kst_test_export",
+                    customize: function (doc) {
+                        // Set table layout to full width
+                        doc.content[1].table.widths =
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                        // Add a subtitle (this example adds it on the second line)
+                        doc.content.splice(1, 0, {
+                            text: '{{$user->name}} Course',
+                            fontSize: 12,
+                            alignment: 'center',
+                            margin: [0, 0, 0, 10]
+                        });
+
+                        // Set margins to ensure table uses full page width
+                        var cm = 28.35;
+                        doc.pageMargins = [2*cm, cm, 2*cm, cm]; // Or any other margin settings
+                    }
+                }
+            ]
+        });
+    });
+
+
+
+
     const username = document.getElementById('username');
     const password = document.getElementById('password');
     const fullname = document.getElementById('name');

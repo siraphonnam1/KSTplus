@@ -17,7 +17,9 @@ use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use Auth;
 use PDF;
+use TCPDF as TCPDF;
 
 class HomeController extends Controller
 {
@@ -61,19 +63,24 @@ class HomeController extends Controller
     }
 
     public function dashboard(Request $request) {
-        $courses = course::orderBy('id', 'desc')->get();
+        $courses = course::all();
         $dpms = department::all();
-        $tests = Test::orderBy('id', 'desc')->get();
-        $activitys = ActivityLog::orderBy('id', 'desc')->get();
+        $tests = Test::all();
+        $activitys = ActivityLog::all();
         $courseDel = course::onlyTrashed()->get();
         $quizDel = quiz::onlyTrashed()->get();
+
+        $agns = agency::all();
+        $brns = branch::all();
+        $roles = Role::all();
+        $permissions = Permission::all();
         // $record->restore();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited dashboard',
         [
             'user_id' => auth()->id(),
         ]);
-        return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel'));
+        return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
     }
 
     public function main(Request $request) {
@@ -132,13 +139,15 @@ class HomeController extends Controller
         $permissions = Permission::all();
         $courses = course::all();
         $ucourse = course::whereIn("id", $user->courses ?? [])->get();
+        $tests = Test::where('tester', $user->id)->orderBy('id', 'desc')->get();
+        $ownCourse = course::where('teacher', $user->id)->orderBy('id', 'desc')->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited userDetail',
         [
             'content' => $id,
             'user' => $request->user(),
         ]);
-        return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse'));
+        return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
     }
 
     public function requestAll(Request $request) {
@@ -258,20 +267,22 @@ class HomeController extends Controller
 
     public function previewPDF($type) {
         $data = [];
+        $agn = agency::find(auth()->user()->agency);
         if ($type == 'course') {
             $courses = course::orderBy('id', 'desc')->get();
-            $data = ['courses' => $courses];
+            $data = ['data' => $courses, 'type' => $type, 'agn' => $agn];
         } elseif ($type == 'test') {
             $tests = Test::orderBy('id', 'desc')->get();
-            $data = ['tests' => $tests];
+            $data = ['data' => $tests, 'type' => $type, 'agn' => $agn];
         } elseif ($type == 'activity') {
             $activitys = ActivityLog::orderBy('id', 'desc')->get();
-            $data = ['activitys' => $activitys];
+            $data = ['data' => $activitys, 'type' => $type, 'agn' => $agn];
         }
+
 
         // Load the view and set paper orientation to landscape
         $pdf = PDF::loadView('page.exports.exportData', $data)
-                  ->setPaper('a4', 'landscape'); // Set the paper size to A4 and orientation to landscape
+                  ->setPaper('a4', 'landscape')->setOptions(['encoding' => 'utf-8']); // Set the paper size to A4 and orientation to landscape
 
         return $pdf->stream('KST_Data.pdf');
     }
