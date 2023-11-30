@@ -94,7 +94,7 @@ class TestController extends Controller
             'answers' => $answers,
         ]);
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'Test',
             'content' => $test->id,
