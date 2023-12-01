@@ -66,7 +66,7 @@ class HomeController extends Controller
         $courses = course::all();
         $dpms = department::all();
         $tests = Test::all();
-        $activitys = ActivityLog::all();
+        $activitys = Activitylog::all();
         $courseDel = course::onlyTrashed()->get();
         $quizDel = quiz::onlyTrashed()->get();
 
@@ -205,7 +205,7 @@ class HomeController extends Controller
                 $staffUser->notify(new MessageNotification($noticText));
             }
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Notification',
                 'content' => $text,
@@ -231,7 +231,7 @@ class HomeController extends Controller
             return response()->json(['status' => 'success'], 200);
         }
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'notification',
             'content' => $notification->id,
@@ -253,7 +253,7 @@ class HomeController extends Controller
             // Save the modified notification back to the database
             $notification->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'notification',
                 'content' => $notification->id,
@@ -275,7 +275,7 @@ class HomeController extends Controller
             $tests = Test::orderBy('id', 'desc')->get();
             $data = ['data' => $tests, 'type' => $type, 'agn' => $agn];
         } elseif ($type == 'activity') {
-            $activitys = ActivityLog::orderBy('id', 'desc')->get();
+            $activitys = Activitylog::orderBy('id', 'desc')->get();
             $data = ['data' => $activitys, 'type' => $type, 'agn' => $agn];
         }
 

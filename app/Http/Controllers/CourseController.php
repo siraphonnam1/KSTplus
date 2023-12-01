@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -55,7 +55,7 @@ class CourseController extends Controller
         // query
         $courses = $courses2->paginate(12);
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'search',
             'content' => $search,
@@ -80,7 +80,7 @@ class CourseController extends Controller
                                 ->orWhere('code', 'like', '%'.$search.'%');
                         })->paginate(12);
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'search',
             'content' => $search,
@@ -145,7 +145,7 @@ class CourseController extends Controller
                 'img' => $filename ?? null,
             ]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Course',
                 'content' => $course->id,
@@ -217,7 +217,7 @@ class CourseController extends Controller
 
             $courses->update($updateData);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Course',
                 'content' => $courses->id,
@@ -249,7 +249,7 @@ class CourseController extends Controller
                 lesson::find($request->delid)->delete();
             }
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => $request->deltype,
                 'content' => $request->delid,
@@ -295,7 +295,7 @@ class CourseController extends Controller
             $user->courses = $courseContainer;
             $user->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Course',
                 'content' => $course->id,
@@ -342,7 +342,7 @@ class CourseController extends Controller
         $dpms = department::all();
         // Return the search view with the results and departments
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'all course',
             'content' => $search,
@@ -402,7 +402,7 @@ class CourseController extends Controller
         $dpms = Department::all();
 
 
-        ActivityLog::create([
+        Activitylog::create([
             'user' => auth()->id(),
             'module' => 'My course',
             'content' => $search,
@@ -430,7 +430,7 @@ class CourseController extends Controller
                 'course'=> $request->courseid,
             ]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'lesson',
                 'content' => $lesson->id,
@@ -463,7 +463,7 @@ class CourseController extends Controller
                 'desc' => $request->desc
             ]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'lesson',
                 'content' => $lesson->id,
@@ -556,7 +556,7 @@ class CourseController extends Controller
                 }
             }
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'sublesson',
                 'content' => $lesson->id,
@@ -602,7 +602,7 @@ class CourseController extends Controller
             $lesson->sub_lessons = $subContainer;
             $lesson->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'sublesson',
                 'content' => $lesson->id,

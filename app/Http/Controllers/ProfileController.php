@@ -11,7 +11,7 @@ use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 
 class ProfileController extends Controller
 {
@@ -40,7 +40,7 @@ class ProfileController extends Controller
             $user->username = $request->email;
             $user->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Profile',
                 'content' => $user->id,
@@ -67,7 +67,7 @@ class ProfileController extends Controller
                 $request->user()->fill(['icon' => $fileName]);
                 $request->user()->save();
 
-                ActivityLog::create([
+                Activitylog::create([
                     'user' => auth()->id(),
                     'module' => 'Icon',
                     'content' => $request->user()->id,

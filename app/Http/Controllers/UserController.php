@@ -13,7 +13,7 @@ Use Alert;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Exception;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 
 class UserController extends Controller
 {
@@ -68,7 +68,7 @@ class UserController extends Controller
             }
             $user->assignRole($request->role);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => $user->id,
@@ -151,7 +151,7 @@ class UserController extends Controller
             $user->assignRole($request->role);
             $user->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => $user->id,
@@ -176,7 +176,7 @@ class UserController extends Controller
         try {
             $user = User::find( $request->delid )->delete();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => $user->id,
@@ -199,7 +199,7 @@ class UserController extends Controller
             $user = User::find( $request->uid );
             $user->update(['startlt'=> $request->date]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => $user->id,
@@ -243,7 +243,7 @@ class UserController extends Controller
             $user->courses = $courseContainer;
             $user->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => json_encode($request->courses),
@@ -290,7 +290,7 @@ class UserController extends Controller
             $user->save();
             $course->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
                 'content' => $course->id,

@@ -9,7 +9,7 @@ use App\Models\Test;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 
 class QuizController extends Controller
 {
@@ -85,7 +85,7 @@ class QuizController extends Controller
                 'showAns' => $request->showAns ?? false,
             ]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Quiz',
                 'content' => $quiz->id,
@@ -120,7 +120,7 @@ class QuizController extends Controller
                 'showAns' => $request->showAns ?? false,
             ]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Quiz',
                 'content' => $quiz->id,
@@ -142,7 +142,7 @@ class QuizController extends Controller
         try {
             $quiz = quiz::find($id)->delete();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Quiz',
                 'content' => $quiz->id,
@@ -194,7 +194,7 @@ class QuizController extends Controller
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Question',
                 'content' => $question->id,
@@ -245,7 +245,7 @@ class QuizController extends Controller
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Question',
                 'content' => $question->id,
@@ -268,7 +268,7 @@ class QuizController extends Controller
         try {
             $question = question::find($id)->delete();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Question',
                 'content' => $question->id,

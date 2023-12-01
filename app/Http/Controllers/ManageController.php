@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use App\Models\ActivityLog;
+use App\Models\Activitylog;
 use App\Models\quiz;
 
 class ManageController extends Controller
@@ -59,7 +59,7 @@ class ManageController extends Controller
             $agn->contact = $validatedData['contact'];
             $agn->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Agency',
                 'content' => $agn->id,
@@ -94,7 +94,7 @@ class ManageController extends Controller
             $brn->agency = $agency;
             $brn->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Branch',
                 'content' => $brn->id,
@@ -122,7 +122,7 @@ class ManageController extends Controller
         try {
             $role = Role::create(['name' => $request->name]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Role',
                 'content' => $role->name,
@@ -150,7 +150,7 @@ class ManageController extends Controller
         try {
             $permission = Permission::create(['name' => $request->name]);
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'permission',
                 'content' => $permission->name,
@@ -190,7 +190,7 @@ class ManageController extends Controller
             $dpm->agency = $brn->agency;
             $dpm->save();
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Department',
                 'content' => $dpm->id,
@@ -221,7 +221,7 @@ class ManageController extends Controller
                 Permission::findByName($request->delid)->delete();
             };
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'delete Data',
                 'content' => $request->type. ' : '. $request->delid,
@@ -298,7 +298,7 @@ class ManageController extends Controller
                 $dpm->save();
             }
 
-            ActivityLog::create([
+            Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Data',
                 'content' => $request->editType. ' : '. $request->name,
