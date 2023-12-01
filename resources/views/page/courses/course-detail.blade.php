@@ -482,7 +482,7 @@
                 title: `Add ${addType}`,
                 html:
                     '<input id="swal-input1" class="swal2-input" placeholder="Enter label">' +
-                    '<input id="content" class="swal2-input" placeholder="Enter embed code">',
+                    '<input id="content" class="swal2-input" placeholder="Enter embed code or link">',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
