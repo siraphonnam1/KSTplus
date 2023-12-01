@@ -52,7 +52,7 @@
                                         PASS
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $timeUsage->format('%i:%s m') }}
+                                        {{ $timeUsage->format('%i:%s min') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $startDate->format('d-m-Y') }}
