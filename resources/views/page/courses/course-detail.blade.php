@@ -534,9 +534,6 @@
         });
     });
 
-    // <li>
-    //     <button class="addQuiz" addType="quiz" lessId="{{ $lesson->id }}">
-    // </li>
     const addQuiz = document.querySelectorAll(".addQuiz");
     addQuiz.forEach((btn) => {
         const lessid = btn.getAttribute('lessId')
