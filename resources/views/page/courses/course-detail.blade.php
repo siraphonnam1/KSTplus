@@ -356,7 +356,11 @@
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
@@ -406,7 +410,11 @@
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
@@ -467,7 +475,11 @@
                         'Success!',
                         'Your sublesson has been saved.',
                         'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
@@ -528,7 +540,11 @@
                         'Success!',
                         'Your sublesson has been saved.',
                         'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
@@ -594,7 +610,11 @@
                         'Success!',
                         'Your sublesson has been saved.',
                         'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
@@ -671,7 +691,11 @@
                         'Success!',
                         'Your sublesson has been saved.',
                         'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         });
