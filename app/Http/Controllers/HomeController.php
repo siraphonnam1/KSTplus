@@ -80,7 +80,12 @@ class HomeController extends Controller
         [
             'user_id' => auth()->id(),
         ]);
-        return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
+        if ($request->user()->hasRole('admin')) {
+            return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     public function main(Request $request) {
@@ -111,7 +116,12 @@ class HomeController extends Controller
         [
             'user' => $request->user(),
         ]);
-        return view("page.home", compact("courses", 'user'));
+        if ($request->user()->hasRole('new')) {
+            return view("page.home", compact("courses", 'user'));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     public function allUsers(Request $request) {
@@ -127,7 +137,12 @@ class HomeController extends Controller
         [
             'user_id' => $request->user(),
         ]);
-        return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
+        if ($request->user()->hasAnyRole('admin', 'staff')) {
+            return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     public function userDetail(Request $request, $id) {
@@ -147,7 +162,12 @@ class HomeController extends Controller
             'content' => $id,
             'user' => $request->user(),
         ]);
-        return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
+        if ($request->user()->hasAnyRole('admin', 'staff')) {
+            return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     public function requestAll(Request $request) {
@@ -165,16 +185,28 @@ class HomeController extends Controller
         [
             'user' => $request->user(),
         ]);
-        return view("page.courses.own-course", compact("courses"));
+        if ($request->user()->hasAnyRole('admin', 'staff', 'teacher')) {
+            return view("page.courses.own-course", compact("courses"));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     public function classroom(Request $request) {
-        $courses = course::where('permission->dpm', "true")
-                 ->where(function ($query) use ($request) {
-                     $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
-                            ->orWhere('dpm', $request->user()->dpm);
-                 })->paginate(12);
+        // $courses = course::where('permission->dpm', "true")
+        //          ->where(function ($query) use ($request) {
+        //              $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+        //                     ->orWhere('dpm', $request->user()->dpm);
+        //          })->paginate(12);
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
+
+        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                 ->orWhere(function ($query) use ($request) {
+                     $query->where('permission->dpm', "true")
+                            ->Where('dpm', $request->user()->dpm);
+                 })->paginate(12);
+
         $dpms = department::all();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited classroom',

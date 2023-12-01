@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
 use App\Models\quiz;
+use Auth;
 
 class ManageController extends Controller
 {
@@ -35,7 +36,12 @@ class ManageController extends Controller
         [
             'user' => $request->user(),
         ]);
-        return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
+        if ($request->user()->hasAnyRole('admin', 'staff')) {
+            return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
+        } else {
+            Auth::logout();
+            return redirect('/');
+        }
     }
 
     /**
