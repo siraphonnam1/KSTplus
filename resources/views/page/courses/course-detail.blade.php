@@ -96,12 +96,12 @@
                                                     <i class="bi bi-list-check bg-secondary rounded-circle p-1 text-light"></i>
                                                     <a
                                                         class="text-primary preQuiz cursor-pointer chapter"
-                                                        qTitle="{{ $quiz->title }}"
-                                                        cid="{{$course->id}}"
-                                                        qid="{{$sls->content}}"
-                                                        pass="{{$quiz->pass_score}}"
-                                                        qBy="{{$quiz->getCreated->name}}"
-                                                        quesNum = "{{$quesnum}}"
+                                                        qTitle="{{ $quiz->title ?? 'unknow'}}"
+                                                        cid="{{$course->id ?? '0'}}"
+                                                        qid="{{$sls->content ?? '0'}}"
+                                                        pass="{{$quiz->pass_score ?? '0'}}"
+                                                        qBy="{{$quiz->getCreated->name ?? 'unknow'}}"
+                                                        quesNum = "{{$quesnum ?? '0'}}"
                                                     >
                                                         {{ $sls->label }}
                                                         <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
@@ -150,7 +150,7 @@
                                     <div id="dropdownDots{{ $lesson->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
                                         <ul class="py-2 text-sm text-gray-700 " aria-labelledby="dropdownMenuIconButton{{ $lesson->id }}">
                                             <li>
-                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 "  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
+                                                <button class="w-100 text-start px-4 py-2 hover:bg-gray-100 addSubText"  addType="text" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Text</button>
                                             </li>
                                             <li>
                                                 <button class="w-100 text-start px-4 py-2 hover:bg-gray-100  addSubLink" addType="link" lessId="{{ $lesson->id }}"><i class="bi bi-plus"></i> Link</button>
@@ -429,7 +429,7 @@
                 title: 'Add text',
                 html:
                     '<input id="swal-input1" class="swal2-input" placeholder="Enter label">' +
-                    '<textarea id="content" class="w-100" rows="5" placeholder="Enter text content"></textarea>',
+                    '<textarea id="content" class="w-100" rows="5" placeholder="Enter text content" value=" "> </textarea>',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -437,15 +437,16 @@
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
                     const label = document.getElementById('swal-input1').value;
-                    const content = document.getElementById('content').value;
+                    let content = document.getElementById('content').value;
 
                     if (!label) {
                         Swal.showValidationMessage("Label is required!");
                         return;
-                    } else if (!content) {
-                        Swal.showValidationMessage("Content is required!");
-                        return;
                     } else {
+                        // Check if content is null or undefined and set a default value
+                        if (content == null || content.trim() === '') {
+                            content = '-'; // Replace with a suitable default string
+                        }
                         return fetch('/lesson/sublesson/add', {
                             method: 'POST',
                             headers: {
@@ -559,7 +560,7 @@
                 title: `Add ${addType}`,
                 html:`<input id="swal-input1" class="swal2-input" placeholder="Enter label">
                 <select id="selQuiz" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                        <option selected disabled>Please select quiz</option>
+                        <option selected disabled value="e">Please select quiz</option>
                     @foreach ($quizzes as $quiz)
                         <option value="{{$quiz->id}}">{{$quiz->title}}</option>
                     @endforeach
@@ -577,8 +578,8 @@
                     if (!label) {
                         Swal.showValidationMessage("Label is required!");
                         return;
-                    } else if (!content) {
-                        Swal.showValidationMessage("Content is required!");
+                    } else if (content == 'e') {
+                        Swal.showValidationMessage("Please select quiz!");
                         return;
                     } else {
                         return fetch('/lesson/sublesson/add', {
@@ -783,6 +784,9 @@
                         </thead>
                         <tbody>
                             @foreach ($tested as $index => $test)
+                                @if ($test->quiz == qid)
+
+                                @endif
                                 <tr class="bg-white border-b  ">
                                     <td class="px-3 py-2">
                                         {{$index +1}}
