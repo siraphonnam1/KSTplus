@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/course/own', [HomeController::class, 'ownCourse'])->name('ownCourse');
     Route::get('/course/classroom', [HomeController::class, 'classroom'])->name('classroom');
     Route::get('/manage', [ManageController::class, 'index'])->name('manage');
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard')->middleware('role:admin');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     // Manage
     Route::post('/manage/addAgency', [ManageController::class,'createAgency'])->name('add.agency');
