@@ -97,9 +97,13 @@ class CourseController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'desc' => ['string', 'max:20000'],
             'title' => ['required', 'string', 'max:5000'],
         ]);
+        if (!is_null($request->desc)) {
+            $request->validate([
+                'desc' => ['string', 'max:20000'],
+            ]);
+        }
         if ($request->hasFile('cimg')) {
             $request->validate([
                 'cimg' => ['file','mimes:jpeg,png,jpg','max:10240'], // 10MB max size, adjust as needed
@@ -161,10 +165,18 @@ class CourseController extends Controller
     public function update(Request $request) {
         $request->validate([
             'courseId' => ['required', 'max:255'],
-            'desc' => ['string', 'max:20000'],
             'title' => ['required', 'string', 'max:5000'],
-            'cimg' => ['required','file','mimes:jpeg,png,jpg','max:10240'],
         ]);
+        if (!is_null($request->desc)) {
+            $request->validate([
+                'desc' => ['string', 'max:20000'],
+            ]);
+        }
+        if ($request->hasFile('cimg')) {
+            $request->validate([
+                'cimg' => ['file','mimes:jpeg,png,jpg','max:10240'], // 10MB max size, adjust as needed
+            ]);
+        }
         try {
             if ($request->hasFile('cimg')) {
                 $file = $request->file('cimg');

@@ -113,7 +113,7 @@
                 })
                 .catch(error => {
                     Swal.showValidationMessage(
-                        `Request failed`
+                        `Request failed` + error
                     )
                 })
             },
