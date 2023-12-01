@@ -77,8 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/renew', [UserController::class,'renew']);
     Route::post('/user/add/course', [UserController::class,'addCourse']);
     Route::post('/user/remove/course', [UserController::class,'removeCourse']);
-    // Route::post('/progress/add/', [UserController::class,'addProgress']);
-    Route::match(['get', 'post'], '/progress/add/', [UserController::class,'addProgress']);
+    Route::get('/progress/add/', [UserController::class,'addProgress']);
 
     // course
     Route::post('/course/add', [CourseController::class,'store']);

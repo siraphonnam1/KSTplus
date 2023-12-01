@@ -291,16 +291,11 @@
             // Get the notification ID from the data attribute
             var cid = $(this).data('cid');
             var lessid = $(this).data('lessid');
-
+            var url = '/progress/add/?_token=' + '&cid=' + encodeURIComponent(cid) + '&lessid=' + encodeURIComponent(lessid);
             // Send an AJAX request to mark the notification as read
             $.ajax({
-                url: '/progress/add/', // You need to define this route in your web.php
-                type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'), // Add CSRF token
-                    cid: cid,
-                    lessid: lessid
-                },
+                url: url, // You need to define this route in your web.php
+                type: 'GET',
                 success: function(response) {
                     // You can add some code here to handle a successful response
                     console.log(response['message']);

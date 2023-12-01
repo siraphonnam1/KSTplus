@@ -309,8 +309,8 @@ class UserController extends Controller
 
     public function addProgress(Request $request) {
         try {
-            $cid = $request->input('cid');
-            $lessid = $request->input('lessid');
+            $cid = $request->query('cid');
+            $lessid = $request->query('lessid');
             $userId = $request->user()->id;
 
             // Check if the progress already exists
@@ -330,7 +330,7 @@ class UserController extends Controller
 
         } catch (\Throwable $th) {
             // Handle exceptions and return an error message
-            return response()->json(['message' => 'addP '.$th->getMessage()], 500); // 500 Internal Server Error
+            return response()->json(['message' => $th->getMessage()], 500); // 500 Internal Server Error
         }
     }
 
