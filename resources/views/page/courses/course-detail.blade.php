@@ -307,7 +307,7 @@
                 },
                 error: function(error) {
                     // You can add some error handling here
-                    console.log('Error');
+                    console.log('Error ',error);
                 }
             });
         });
@@ -751,7 +751,6 @@
         const qpass = qzbtn.getAttribute('pass');
         const qBy = qzbtn.getAttribute('qBy');
         const quesNum = qzbtn.getAttribute('quesNum');
-        console.log('quiz', qTitle, qid);
         qzbtn.addEventListener('click', function () {
             const pdfUrl = this.getAttribute('data-file-path');
             Swal.fire({

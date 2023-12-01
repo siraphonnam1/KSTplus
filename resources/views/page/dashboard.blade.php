@@ -196,6 +196,9 @@
                                     <th scope="col" class="px-6 py-3">
                                         Note
                                     </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Date
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -215,6 +218,9 @@
                                         </td>
                                         <td class="px-6 py-2">
                                             {{ $log->content }}
+                                        </td>
+                                        <td class="px-6 py-2">
+                                            {{ $log->created_at }}
                                         </td>
                                     </tr>
                                 @endforeach

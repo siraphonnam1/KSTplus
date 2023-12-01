@@ -330,7 +330,7 @@ class UserController extends Controller
 
         } catch (\Throwable $th) {
             // Handle exceptions and return an error message
-            return response()->json(['message' => $th->getMessage()], 500); // 500 Internal Server Error
+            return response()->json(['message' => 'addP '.$th->getMessage()], 500); // 500 Internal Server Error
         }
     }
 
