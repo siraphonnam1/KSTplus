@@ -784,30 +784,29 @@
                         </thead>
                         <tbody>
                             @foreach ($tested as $index => $test)
-                                @if ($test->quiz == qid)
-
+                                @if ($test->quiz == ${qid})
+                                    <tr class="bg-white border-b  ">
+                                        <td class="px-3 py-2">
+                                            {{$index +1}}
+                                        </td>
+                                        <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap ">
+                                            {{$test->getQuiz->title}}
+                                        </th>
+                                        <td class="px-3 py-2">
+                                            {{$test->score}}/{{$test->totalScore}}
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
+                                                <p class="text-green-500">PASS</p>
+                                            @else
+                                                <p class="text-red-500">FAIL</p>
+                                            @endif
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            {{$test->created_at->format('d-m-Y')}}
+                                        </td>
+                                    </tr>
                                 @endif
-                                <tr class="bg-white border-b  ">
-                                    <td class="px-3 py-2">
-                                        {{$index +1}}
-                                    </td>
-                                    <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap ">
-                                        {{$test->getQuiz->title}}
-                                    </th>
-                                    <td class="px-3 py-2">
-                                        {{$test->score}}/{{$test->totalScore}}
-                                    </td>
-                                    <td class="px-3 py-2">
-                                        @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
-                                            <p class="text-green-500">PASS</p>
-                                        @else
-                                            <p class="text-red-500">FAIL</p>
-                                        @endif
-                                    </td>
-                                    <td class="px-3 py-2">
-                                        {{$test->created_at->format('d-m-Y')}}
-                                    </td>
-                                </tr>
                             @endforeach
                         </tbody>
                     </table>
