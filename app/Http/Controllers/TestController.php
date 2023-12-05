@@ -34,14 +34,6 @@ class TestController extends Controller
         //  clear session -> session()->forget('scores');
         $quiz = quiz::find($quizId);
 
-        session()->forget('scores');
-        session()->forget('quests');
-        session()->forget('totalScore');
-        session()->forget('timeUsege');
-        session()->forget('quizId');
-        session()->forget('courseId');
-        session()->forget('answers');
-
         Log::channel('activity')->info('User '. $request->user()->name .' visited test summary',
         [
             'user' => $request->user(),

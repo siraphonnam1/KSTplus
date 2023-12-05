@@ -99,11 +99,11 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 7-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
                                 @endif
-                                <p class="mb-2">{{$qindex+1}}. {{$quest->title}}</p>
+                                <p class="mb-2">{{$qindex+1}}. {!! $quest->title !!}</p>
                             </div>
 
                             @if ($quest->type)
-                                <div class="flex lg:gap-20 gap-3.5 bg-gray-200 p-2 flex-wrap rounded">
+                                <div class="flex lg:gap-20 gap-3.5 bg-gray-200 p-2 mt-2 flex-wrap rounded">
                                     @foreach ($quest->answer as $aindex => $choice)
                                         <p class="
                                             {{$choice['id'] == $answers[$quest->id]['ans'] ? ($answers[$quest->id]['status'] ? 'text-green-500' : 'text-red-500') : ($choice['answer'] ? 'text-green-500' : '')}}

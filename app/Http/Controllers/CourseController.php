@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\quiz;
 use Illuminate\Http\Request;
 use App\Models\course;
 use App\Models\lesson;
@@ -554,6 +555,14 @@ class CourseController extends Controller
                     $lesson->sub_lessons = $subContainer;
                     $lesson->save();
                 }
+
+                if ($request->addType == "quiz") {
+                    $quiz = quiz::find($request->content);
+                    $forCourse = is_null($quiz->for_courses) ? [] : $quiz->for_courses;
+                    $forCourse[] = $lesson->getCourse->code;
+                    $quiz->for_courses = json_encode($forCourse);
+                    $quiz->save();
+                }
             }
 
             Activitylog::create([
@@ -567,7 +576,7 @@ class CourseController extends Controller
                 'user_id' => auth()->id(),
                 'content' => $lesson,
             ]);
-            return response()->json(['success' => $subContainer]);
+            return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['error' => $th->getMessage()]);
@@ -593,6 +602,22 @@ class CourseController extends Controller
                                 if (File::exists($filePath)) {
                                     File::delete($filePath);
                                 }
+                            } elseif ($item->type == "quiz") {
+                                $quiz = quiz::find($item->content);
+                                $forCourse = is_null($quiz->for_courses) ? [] : $quiz->for_courses;
+                                $new4Course = [];
+                                $delStatus = 0;
+                                foreach ($forCourse as $key => $item) {
+                                    if ($item !== $lesson->getCourse->code) {
+                                        $new4Course[] = $item;
+                                    } elseif ($delStatus == 1) {
+                                        $new4Course[] = $item;
+                                    } else {
+                                        $delStatus = 1;
+                                    }
+                                }
+                                $quiz->for_courses = json_encode($new4Course);
+                                $quiz->save();
                             }
                         }
                     }

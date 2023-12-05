@@ -12,17 +12,13 @@
                     <p class="fw-bold text-2xl mb-4">Edit Question</p>
                     <div class="mb-4 border-b border-gray-200 ">
                         <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Question Title: </p>
-                            <input
-                                type="text"
-                                id="title"
-                                name="title"
-                                maxlength="1000"
-                                value="{{$quest->title}}"
-                                class="col-span-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Question title" required>
+                            <p class="self-center text-lg col-span-8 sm:col-span-2 md:col-span-2 lg:sm:col-span-1">Question Title: </p>
+                            <div class="col-span-8 sm:col-span-6 block w-full">
+                                <textarea name="title" id="myeditorinstance">{!! $quest->title !!}</textarea>
+                            </div>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Question Score: </p>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
+                            <p class="self-center text-xs sm:text-lg">Question Score: </p>
                             <input type="number"
                                     id="score"
                                     min="1"
@@ -32,7 +28,7 @@
                                     class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                             <p class="self-center text-xs ms-2 text-gray-400">Number 1 - 100</p>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
                             <p class="self-center text-lg"></p>
                             <div class="flex items-center mb-4">
                                 <input id="shuffle"
@@ -44,9 +40,9 @@
                                 <label for="shuffle" class="ms-2 text-sm font-medium text-gray-900 ">Shuffle choices</label>
                             </div>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Answer type:</p>
-                            <div class="flex gap-4">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
+                            <p class="self-center text-xs sm:text-lg">Answer type:</p>
+                            <div class="flex gap-4 col-span-2">
                                 <div class="flex items-center">
                                     <input {{ $quest->type ? 'checked' : ''}} id="default-radio-1" type="radio" value="1" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
                                     <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 ">Choice</label>
@@ -81,7 +77,7 @@
                         </div>
                     </div>
                     <div id="default-tab-content">
-                        <div class="flex hidden p-2 ps-5 rounded-lg bg-gray-50 " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="flex flex-wrap hidden p-2 ps-5 rounded-lg bg-gray-50 " id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="grow">
                                 <ol class="list-decimal" id="choiceList">
                                     @if ($quest->type)
@@ -138,6 +134,21 @@
             </form>
         </div>
     </div>
+    <script src="https://cdn.tiny.cloud/1/4vdoimdjlqj1524p4qwd6k1jg1w71ys0syull57gnp048kgf/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template'
+            ],
+            // toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table emoticons fullscreen',
+            toolbar: false,
+            height: 200,
+            menubar: 'file edit view insert format table',
+        });
+    </script>
 </x-app-layout>
 <script>
     $(document).ready(function() {

@@ -17,9 +17,16 @@ class quiz extends Model
         "shuffle_quest",
         "create_by",
         'showAns',
+        'for_courses'
     ];
 
     public function getCreated() {
         return $this->belongsTo(User::class, 'create_by');
+    }
+
+    public function getForCoursesAttribute($value)
+    {
+        $decoded = json_decode($value, true);
+        return is_array($decoded) ? $decoded : [];
     }
 }

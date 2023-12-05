@@ -8,28 +8,30 @@
         <div class="max-w-7xl mx-auto">
             <form action="{{ route('quiz.quest.store', ['id' => $id]) }}" method="post">
                 @csrf
-                <div class="card px-5 py-4">
+                <div class="card px-4 py-4">
                     <p class="fw-bold text-2xl mb-4">Add Question</p>
                     <div class="mb-4 border-b border-gray-200 ">
                         <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Question Title: </p>
-                            <input type="text" id="title" name="title" maxlength="1000" class="col-span-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Question title" required>
+                            <p class="self-center col-span-8 sm:col-span-2 md:col-span-2 lg:sm:col-span-1 text-lg">Question Title: </p>
+                            <div class="col-span-8 sm:col-span-6 block w-full">
+                                <textarea name="title"  id="myeditorinstance"></textarea>
+                            </div>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Question Score: </p>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
+                            <p class="self-center text-xs sm:text-lg ">Question Score: </p>
                             <input type="number" id="score" min="1" max="100" name="score" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " value="{{1}}">
                             <p class="self-center text-xs ms-2 text-gray-400">Number 1 - 100</p>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
                             <p class="self-center text-lg"></p>
                             <div class="flex items-center mb-4">
                                 <input id="shuff" name="shuffle" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
                                 <label for="shuff" class="ms-2 text-sm font-medium text-gray-900 ">Shuffle choices</label>
                             </div>
                         </div>
-                        <div class="grid grid-cols-8 mb-3">
-                            <p class="self-center text-lg">Answer type:</p>
-                            <div class="flex gap-4">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
+                            <p class="self-center text-xs sm:text-lg">Answer type:</p>
+                            <div class="flex gap-4 col-span-2">
                                 <div class="flex items-center">
                                     <input checked id="default-radio-1" type="radio" value="1" name="ansType" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
                                     <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 ">Choice</label>
@@ -64,7 +66,7 @@
                         </div>
                     </div>
                     <div id="default-tab-content">
-                        <div class="flex hidden p-2 ps-5 rounded-lg bg-gray-50 " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="flex flex-wrap hidden p-2 ps-5 rounded-lg bg-gray-50 " id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="grow">
                                 <ol class="list-decimal" id="choiceList">
                                     <li class="mb-2">
@@ -72,7 +74,7 @@
                                             <input type="text" id="choice1" maxlength="1000" name="choice1" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text" />
                                             <div class="flex items-center">
                                                 <input id="default-checkbox1" name="answer1" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
-                                                <label for="default-checkbox1" class="ms-2 text-sm font-medium text-gray-900 ">Answer</label>
+                                                <label for="default-checkbox1" class="ms-2 text-xs sm:text-sm font-medium text-gray-900 ">Answer</label>
                                             </div>
                                         </div>
                                     </li>
@@ -81,7 +83,7 @@
                                             <input type="text" id="choice2" maxlength="1000" name="choice2" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input choice text"/>
                                             <div class="flex items-center">
                                                 <input id="default-checkbox2" name="answer2" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
-                                                <label for="default-checkbox2" class="ms-2 text-sm font-medium text-gray-900 ">Answer</label>
+                                                <label for="default-checkbox2" class="ms-2 text-xs sm:text-sm font-medium text-gray-900 ">Answer</label>
                                             </div>
                                         </div>
                                     </li>
@@ -108,6 +110,21 @@
             </form>
         </div>
     </div>
+    <script src="https://cdn.tiny.cloud/1/4vdoimdjlqj1524p4qwd6k1jg1w71ys0syull57gnp048kgf/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template'
+            ],
+            // toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table emoticons fullscreen',
+            toolbar: false,
+            height: 200,
+            menubar: 'file edit view insert format table',
+        });
+    </script>
 </x-app-layout>
 <script>
     $(document).ready(function() {

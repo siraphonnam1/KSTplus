@@ -49,7 +49,11 @@
                                         {{ $test->score }} / {{ $test->totalScore }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        PASS
+                                        @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
+                                            <p class="text-green-500">PASS</p>
+                                        @else
+                                            <p class="text-red-500">FAIL</p>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $timeUsage->format('%i:%s min') }}

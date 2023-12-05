@@ -104,6 +104,9 @@
                                     Title
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Course
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Timelimit
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -125,6 +128,11 @@
                                     </th>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                                         {{ $quiz->title }}
+                                    </th>
+                                    <th class="px-6 py-4">
+                                        @foreach ($quiz->for_courses as $item)
+                                            <p>{{$item}}</p>
+                                        @endforeach
                                     </th>
                                     <td class="px-6 py-4">
                                         {{ $quiz->time_limit ? $quiz->time_limit : "None" }}
