@@ -6,7 +6,7 @@
     <title>500 {{ config('app.name', 'Laravel') }}</title>
 
     <!-- icon  -->
-    <link rel="icon" href="/img/dronecamera.png" />
+    <link rel="icon" href="/img/logoiddrives.png" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 .main-error-page {
@@ -762,7 +762,7 @@ button:hover{
         <h2 class="error-subtitle">
          Have you tried turning it off and on again?
         </h2>
-        <a href="/login"><button type="button">กลับไปยังหน้าหลัก</button></a>
+        <a href="/main"><button type="button">กลับไปยังหน้าหลัก</button></a>
 
 
       </div>

@@ -7,7 +7,7 @@
     <title>404 {{ config('app.name', 'Laravel') }}</title>
 
     <!-- icon  -->
-    <link rel="icon" href="/img/dronecamera.png" />
+    <link rel="icon" href="/img/logoiddrives.png" />
 
     <style>
         @import url('https://fonts.googleapis.com/css?family=Dosis:300,400,500');
@@ -307,12 +307,12 @@
     <div class="stars">
         <div class="custom-navbar">
             <div class="brand-logo">
-                <img src="/img/logodronettc.png" width="150px">
+                <img src="/img/logo.png" width="150px">
             </div>
         </div>
         <div class="central-body">
             <img class="image-404" src="http://salehriaz.com/404Page/img/404.svg" width="300px">
-            <a href="/admin" class="btn-go-home">GO BACK HOME</a>
+            <a href="/main" class="btn-go-home">GO BACK HOME</a>
         </div>
         <div class="objects">
             <img class="object_rocket" src="http://salehriaz.com/404Page/img/rocket.svg" width="40px">
