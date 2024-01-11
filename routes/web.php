@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/request/all', [HomeController::class, 'requestAll'])->name('request.all');
     Route::get('/course/own', [HomeController::class, 'ownCourse'])->name('ownCourse');
     Route::get('/course/classroom', [HomeController::class, 'classroom'])->name('classroom');
-    Route::get('/manage', [ManageController::class, 'inde'])->name('manage');
+    Route::get('/manage', [ManageController::class, 'index'])->name('manage');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     // Manage
