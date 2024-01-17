@@ -22,39 +22,39 @@
             <div class="flex items-center ml-2">
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" style="color:white !important">
                     <a href="{{route('main')}}" >
-                        {{ __('Home') }}
+                        {{ __('messages.home') }}
                     </a>
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <a href="#" >
-                                {{ __('Course') }}
+                                {{ __('messages.course') }}
                             </a>
                         </x-slot>
 
                         <x-slot name="content">
                             @hasanyrole('admin|teacher|staff')
                                 <x-dropdown-link :href="route('ownCourse')">
-                                    {{ __('Own Course') }}
+                                    {{ __('messages.own_course') }}
                                 </x-dropdown-link>
                             @endhasanyrole
                             <x-dropdown-link :href="route('course.all')">
-                                {{ __('All course') }}
+                                {{ __('messages.all_course') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('classroom')">
-                                {{ __('Classroom') }}
+                                {{ __('messages.classroom') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                     @hasanyrole('admin|teacher|staff')
                         <a href="{{route('quiz')}}" >
-                            {{ __('Quiz') }}
+                            {{ __('messages.quiz') }}
                         </a>
                         <a href="{{route('request.all')}}" >
-                            {{ __('Request') }}
+                            {{ __('messages.request') }}
                         </a>
                         @hasanyrole('admin|staff')
                         <a href="{{route('users.all')}}" >
-                            {{ __('Users') }}
+                            {{ __('messages.users') }}
                         </a>
                         @endhasanyrole
                         @hasrole('admin')
@@ -62,7 +62,7 @@
                                 {{ __('Manage') }}
                             </a> --}}
                             <a href="{{route('dashboard')}}" >
-                                {{ __('Dashboard') }}
+                                {{ __('messages.dashboard') }}
                             </a>
                         @endhasrole
                     @endhasanyrole
@@ -82,12 +82,11 @@
                 </button>
             @endunlessrole
 
-
             @hasanyrole('admin|staff')
                 <!-- Dropdown menu -->
                 <div id="dropdownNotification" class="z-20 hidden w-full max-w-sm bg-white divide-y divide-gray-100 rounded-lg shadow  dark:divide-gray-700" aria-labelledby="dropdownNotificationButton">
                     <div class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50  ">
-                        Notifications
+                        {{ __('messages.notify') }}
                     </div>
                 <div class="divide-y divide-gray-100 dark:divide-gray-700">
                     @if (count(auth()->user()->unreadNotifications) > 0)
@@ -107,7 +106,7 @@
                         @endforeach
                     @else
                         <div class="flex justify-center py-4">
-                            <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">No Notifications Right Now!</span>
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{ __('messages.notify_no') }}</span>
                         </div>
                     @endif
                 </div>
@@ -116,7 +115,7 @@
                     <svg class="w-4 h-4 mr-2 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
                         <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
                     </svg>
-                        View all
+                    {{ __('messages.view_all') }}
                     </div>
                 </a>
                 </div>
@@ -139,7 +138,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('messages.profile') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -149,9 +148,14 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('messages.logout') }}
                             </x-dropdown-link>
                         </form>
+                        <hr>
+                        <div class="flex justify-center gap-2">
+                            <a href="{{ route('switch-language', ['locale' => 'en']) }}" data-toggle="tooltip" title="English"><img src="/img/english.png" class="hover:scale-90" width="30" alt=""></a>
+                            <a href="{{ route('switch-language', ['locale' => 'th']) }}" data-toggle="tooltip" title="Thai"><img src="/img/thai.png" class="hover:scale-90" width="30" alt=""></a>
+                        </div>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -172,37 +176,37 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('main')" :active="request()->routeIs('home')">
-                {{ __('Home') }}
+                {{ __('messages.home') }}
             </x-responsive-nav-link>
             @hasanyrole('admin|teacher|staff')
                 <x-responsive-nav-link :href="route('course.all')" :active="request()->routeIs('home')">
-                    {{ __('Own Course') }}
+                    {{ __('messages.own_course') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('quiz')" :active="request()->routeIs('home')">
-                    {{ __('Quiz') }}
+                    {{ __('messages.quiz') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('request.all')" :active="request()->routeIs('home')">
-                    {{ __('Request') }}
+                    {{ __('messages.request') }}
                 </x-responsive-nav-link>
                 @hasanyrole('admin|staff')
                     <x-responsive-nav-link :href="route('users.all')" :active="request()->routeIs('home')">
-                        {{ __('Users') }}
+                        {{ __('messages.users') }}
                     </x-responsive-nav-link>
                     @hasrole('admin')
                         {{-- <x-responsive-nav-link :href="route('manage')" :active="request()->routeIs('home')">
                             {{ __('Manage') }}
                         </x-responsive-nav-link> --}}
                         <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('home')">
-                            {{ __('Dashboard') }}
+                            {{ __('messages.dashboard') }}
                         </x-responsive-nav-link>
                     @endhasrole
                 @endhasanyrole
             @endhasanyrole
             <x-responsive-nav-link :href="route('course.all')" :active="request()->routeIs('home')">
-                {{ __('All course') }}
+                {{ __('messages.all_course') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('course.all')" :active="request()->routeIs('home')">
-                {{ __('Classroom') }}
+                {{ __('messages.classroom') }}
             </x-responsive-nav-link>
         </div>
 
@@ -215,7 +219,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('messages.profile') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -225,7 +229,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('messages.logout') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

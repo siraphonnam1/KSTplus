@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="container py-5">
         <div class="text-center text-4xl font-bold uppercase mb-5">
-            Test summary
+            {{ __('messages.test_summ') }}
         </div>
         <div class="row justify-center">
             <div class="card p-4 pb-2 mb-4">
-                <p class="text-2xl font-bold">Quiz :: {{$quiz->title}}</p>
+                <p class="text-2xl font-bold">{{ __('messages.quiz') }} :: {{$quiz->title}}</p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 py-4">
                     <div class="card p-2 rounded-xl flex flex-row bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-600 border-0 text-white shadow">
@@ -15,7 +15,7 @@
                             </svg>
                         </div>
                         <div class="px-2">
-                            <p class="text-xs">Time usage</p>
+                            <p class="text-xs">{{ __('messages.time_use') }}</p>
                             <p class="text-3xl font-bold">{{$timeUsege->format('%i.%s')}} min.</p>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                             </svg>
                         </div>
                         <div class="px-2">
-                            <p class="text-xs">Score</p>
+                            <p class="text-xs">{{ __('messages.score') }}</p>
                             <p class="text-3xl font-bold">{{$scores}}/{{$totalScore}}</p>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                             @endif
                         </div>
                         <div class="px-2">
-                            <p class="text-xs">Result</p>
+                            <p class="text-xs">{{ __('messages.result') }}</p>
                             <p class="text-3xl font-bold">{{ $scores > ($totalScore * $quiz->pass_score / 100) ? 'PASS' : 'FAIL' }}</p>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
 
                 <div class="card p-2 mb-2 bg-gray-100 border-0">
                     <div class="mb-2">
-                        <p>Answer:</p>
+                        <p>{{ __('messages.answer') }}:</p>
                     </div>
                     <div class="flex gap-2 flex-wrap">
                         @php
@@ -71,7 +71,7 @@
                 <div class="mt-2">
                     <a href="{{route('course.detail', ['id' => $cid])}}">
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2   focus:outline-none ">
-                            Back To Course
+                            {{ __('messages.back_2_course') }}
                         </button>
                     </a>
                 </div>
@@ -80,10 +80,10 @@
             @if ($quiz->showAns)
                 <div class="card p-4">
                     <div class="flex justify-between flex-wrap mb-4">
-                        <p class="text-2xl font-bold">Answer:</p>
+                        <p class="text-2xl font-bold">{{ __('messages.answer') }}:</p>
                         <div>
-                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> Correct answer</p>
-                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-3 bg-red-500 rounded-full"></span> Your answer and it's incurrect</p>
+                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-3 bg-green-500 rounded-full"></span> {{ __('messages.currect') }}</p>
+                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-3 bg-red-500 rounded-full"></span> {{ __('messages.incurrect') }}</p>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                                     @endforeach
                                 </div>
                             @else
-                                <p class="mb-2"><b>Answer:</b> &nbsp;
+                                <p class="mb-2"><b>{{ __('messages.answer') }}:</b> &nbsp;
                                     <span class="{{ $answers[$quest->id]['status'] ? 'text-green-500' : 'text-red-500' }} bg-gray-200 px-2 py-1 rounded">{{$answers[$quest->id]['ans']}}</span>
                                     <span class="text-green-500 bg-green-100 px-2 rounded py-1 {{$answers[$quest->id]['status'] ? 'hidden' : ''}}">{{$quest->answer[0]['answer']}}</span>
                                 </p>

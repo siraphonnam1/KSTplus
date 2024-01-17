@@ -20,6 +20,8 @@ use App\Models\Activitylog;
 use Auth;
 use PDF;
 use TCPDF as TCPDF;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class HomeController extends Controller
 {

@@ -2,7 +2,7 @@
     <div class="py-10">
         <div class="px-4 max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-4 flex justify-between items-center">
-                <p class="fs-2">Test Record:: <b>{{ $quiz->title }}</b></p>
+                <p class="fs-2">{{ __('messages.test_rec') }}:: <b>{{ $quiz->title }}</b></p>
             </div>
 
             <div>
@@ -14,19 +14,19 @@
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    User
+                                    {{ __('messages.user_name') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Score
+                                    {{ __('messages.score') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Status
+                                    {{ __('messages.status') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Time Usage
+                                    {{ __('messages.time_use') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Date
+                                    {{ __('messages.date') }}
                                 </th>
                             </tr>
                         </thead>
@@ -50,13 +50,17 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
-                                            <p class="text-green-500">PASS</p>
+                                            <p class="text-green-500">{{ __('messages.pass') }}</p>
                                         @else
-                                            <p class="text-red-500">FAIL</p>
+                                            <p class="text-red-500">{{ __('messages.fail') }}</p>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $timeUsage->format('%i:%s min') }}
+                                        @if ( $timeUsage->h )
+                                            {{ $timeUsage->format('%h:%i:%s') }}
+                                        @else
+                                            {{ $timeUsage->format('%i:%s min') }}
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $startDate->format('d-m-Y') }}

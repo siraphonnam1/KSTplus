@@ -2,10 +2,10 @@
     <div class="py-12">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-3 px-4 flex justify-between items-center">
-                <p class="fs-2 fw-bold">My Classroom</p>
+                <p class="fs-2 fw-bold">{{ __('messages.classroom') }}</p>
                 <div class="basis-1/4">
                     <div class="relative w-full">
-                        <input type="search" id="search-courses" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Search courses">
+                        <input type="search" id="search-courses" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="{{ __('messages.search') }}">
                         <button type="submit" class="absolute top-0 end-0 p-2.5 h-full text-sm font-medium text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="card-body" style="border-radius: 0px 0px 5px 5px">
                                         <div class="p-2 pt-0">
-                                            <p class="card-title fw-bold mb-0 text-xs">ฝ่าย: {{ optional($course->getDpm)->name }}</p>
+                                            <p class="card-title fw-bold mb-0 text-xs">{{ __('messages.dpm') }}: {{ optional($course->getDpm)->name }}</p>
                                             <h5 class="card-title fw-bold text-xl mb-2">{{ $course->code }} : {{ Str::limit($course->title, 60) }}</h5>
                                             <p class="card-text text-gray-600 text-sm">{{ Str::limit($course->description, 100) }}</p>
                                         </div>

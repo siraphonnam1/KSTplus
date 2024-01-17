@@ -47,6 +47,7 @@ class QuizController extends Controller
     }
 
     public function editQuestion(Request $request, $qid, $id) {
+        $quiz = quiz::find($qid);
         $quest = Question::find($id);
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited edit question',
@@ -54,7 +55,7 @@ class QuizController extends Controller
             'user' => $request->user(),
             'question' => $quest,
         ]);
-        return view("page.quizzes.quest_edit", compact("id","quest"));
+        return view("page.quizzes.quest_edit", compact("id","quest","quiz"));
     }
 
     public function quizDetail(Request $request, $id) {
@@ -140,7 +141,11 @@ class QuizController extends Controller
 
     public function destroy(Request $request, $id) {
         try {
-            $quiz = quiz::find($id)->delete();
+            $quiz = quiz::find($id);
+
+            if ($quiz) {
+                $quiz->delete();
+            }
 
             Activitylog::create([
                 'user' => auth()->id(),

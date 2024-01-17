@@ -115,6 +115,12 @@ Route::middleware('auth')->group(function () {
     // Export file
     Route::get('/export/{type}', [HomeController::class, 'previewPDF'])->name('export.pdf');
 
+    Route::get('/language/{locale}', function ($locale) {
+        app()->setLocale($locale);
+        session()->put('locale', $locale);
+        return redirect()->back();
+    })->name('switch-language');
+
 
 });
 

@@ -1,13 +1,13 @@
 <x-app-layout>
     <div class="text-center mt-5">
-        <p class="fs-1 fw-bold">Own Course</p>
+        <p class="fs-1 fw-bold">{{ __('messages.own_course') }}</p>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="sm:rounded-lg p-4 row">
                 <div class="mb-4 flex justify-end">
                     <button class="btn btn-success" onclick="showAddCourseAlert()">
-                        <i class="bi bi-plus-circle-fill"></i> Add Course
+                        <i class="bi bi-plus-circle-fill"></i> {{ __('messages.add_course') }}
                     </button>
                 </div>
                 <div class="overflow-y-auto mb-4" style="height: 520px">
@@ -23,7 +23,7 @@
                                         <div class="col-md-8">
                                             <div class="card-body">
                                                 <h5 class="card-title fw-bold mb-0 fs-4">{{ $course->title }}</h5>
-                                                <p class="card-text fw-bold mb-2">ID: {{ $course->code }} &nbsp;&nbsp; By: {{ optional($course->getDpm)->name }}</p>
+                                                <p class="card-text fw-bold mb-2">{{ __('messages.id') }}: {{ $course->code }} &nbsp;&nbsp; {{ __('messages.by') }}: {{ optional($course->getDpm)->name }}</p>
                                                 <p class="card-text text-secondary text-truncate" style="text-indent: 1em">{{ $course->description}}</p>
                                             </div>
                                         </div>
@@ -36,7 +36,7 @@
                             </div>
                         @endforeach
                     @else
-                        <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded ">Course not found</span></div>
+                        <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded ">{{ __('messages.course_not') }}</span></div>
                     @endif
                 </div>
             </div>
@@ -46,30 +46,30 @@
 <script>
     function showAddCourseAlert() {
         Swal.fire({
-            title: 'Add Course',
+            title: 'เพิ่มหลักสูตร',
             html: `
                 <div class="mb-3">
-                    <label for="topic" class="form-label text-start">Topic</label>
+                    <label for="topic" class="form-label text-start">ชื่อหลักสูตร</label>
                     <input type="text" class="form-control" id="topic">
                 </div>
                 <div class="mb-3">
-                    <label for="desc" class="form-label">Description</label>
+                    <label for="desc" class="form-label">คำอธิบาย</label>
                     <textarea class="form-control" id="desc" rows="2"></textarea>
                 </div>
 
-                <p class="mb-3">Permission</p>
+                <p class="mb-3">สิทธิ์การเข้าถึง</p>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="allPer" value="option1">
-                    <label class="form-check-label" for="allPer">All</label>
+                    <label class="form-check-label" for="allPer">ทั้งหมด</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="dpmPer" value="option2">
-                    <label class="form-check-label" for="dpmPer">DpmOnly</label>
+                    <label class="form-check-label" for="dpmPer">ฝ่ายเท่านั้น</label>
                 </div>
                 <div class="flex items-center justify-center w-full mt-2">
                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
                         <div class="flex flex-col items-center justify-center pt-2 pb-2">
-                            <p class="mb-2 font-bold">Course image</p>
+                            <p class="mb-2 font-bold">รูปภาพหน้าปก</p>
                             <p class="text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
                             <p class="text-xs text-gray-500 ">jpeg,png  (MAX 10Mb size)</p>
                         </div>

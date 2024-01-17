@@ -101,7 +101,7 @@
                     <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด <br> 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
                 <div class="text-center flex items-center">
-                    <p>Powered by © 2023 KST ID System</p>
+                    <p>© 2023 KST ID System</p>
                 </div>
             </footer>
         </div>
