@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('users', 'email')) {
+        if (Schema::hasColumn('users', 'email')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->renameColumn('email', 'username');
             });
