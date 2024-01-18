@@ -15,26 +15,23 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::create(['name' => 'admin']);
-        $staffRole = Role::create(['name' => 'staff']);
-        $teacherRole = Role::create(['name' => 'teacher']);
-        $employeeRole = Role::create(['name' => 'employee']);
-        $newRole = Role::create(['name' => 'new']);
-
-        $adminUser = User::create([
-            'name' => 'AdminKST',
-            'username' => 'admin', // Make sure 'username' is a valid column in your users table
-            'password' => 'iddrivesadmin', // Replace with a secure password
-            'agency' => '0',
-            'brn' => '0',
-            'dpm' => '0',
-            'role' => 'admin',
-            'icon' => null,
-            'courses'=> null,
-            // ... any other user fields
-        ]);
-
-        $adminUser->assignRole($adminRole);
-
+        $this->createRoleIfNotExists('admin');
+        $this->createRoleIfNotExists('staff');
+        $this->createRoleIfNotExists('teacher');
+        $this->createRoleIfNotExists('employee');
+        $this->createRoleIfNotExists('new');
     }
+
+    private function createRoleIfNotExists(string $roleName): void
+    {
+        $role = Role::where('name', $roleName)->first();
+
+        if (!$role) {
+            Role::create(['name' => $roleName]);
+            $this->command->info("Role '{$roleName}' created successfully.");
+        } else {
+            $this->command->info("Role '{$roleName}' already exists.");
+        }
+    }
+
 }
