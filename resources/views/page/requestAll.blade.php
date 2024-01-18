@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="text-center mt-5">
-        <p class="fs-1 fw-bold">Request All</p>
+        <p class="fs-1 fw-bold">{{ __('messages.req_all') }}</p>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -85,6 +85,9 @@
         </div>
     </div>
 </x-app-layout>
+
+
+
 <script type="text/javascript">
 
     $(document).ready(function() {

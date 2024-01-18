@@ -132,7 +132,7 @@
                                         </div>
                                         <div>
                                             <p class="text-xl">Average</p>
-                                            <p class="text-5xl sm:text-7xl md:text-9xl">{{ intval($passtest * 100 /  $totaltest) }}%</p>
+                                            <p class="text-5xl sm:text-7xl md:text-9xl">{{ intval($totaltest != 0 ? $passtest * 100 /  $totaltest : 0) }}%</p>
                                             <p class="text-xl">Pass from</p>
                                             <p class="text-xl">Total : <b>{{$totaltest}}</b> times</p>
                                         </div>
