@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('brn');
             $table->string('dpm');
             $table->string('role');
-            $table->json('courses')->nullable;
+            $table->json('courses')->nullable();
         });
     }
 
